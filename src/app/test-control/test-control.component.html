@@ -1,19 +1,1 @@
 <app-generic-table [displayedColumns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)"></app-generic-table>
-
-<mat-vertical-stepper *ngIf="selectedTest" linear>
-  <mat-step>
-    <ng-template matStepLabel>Step 1</ng-template>
-    <p>Name: {{ selectedTest?.name }}</p>
-    <button mat-button matStepperNext>Next</button>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Step 2</ng-template>
-    <p>Version: {{ selectedTest?.version }}</p>
-    <button mat-button matStepperNext>Next</button>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Step 3</ng-template>
-    <p>State: {{ selectedTest?.state }}</p>
-    <button mat-button (click)="closeStepper()">Close</button>
-  </mat-step>
-</mat-vertical-stepper>

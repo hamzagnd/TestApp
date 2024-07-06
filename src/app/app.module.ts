@@ -8,13 +8,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http'; // provideHttpClient ve withFetch import edildi
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 import { AppComponent } from './app.component';
 import { GenericTableComponent } from './generic-table/generic-table.component';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatStep, MatStepLabel, MatStepper, MatStepperNext} from "@angular/material/stepper";
-import {MatExpansionModule} from "@angular/material/expansion";
 import { TestControlComponent } from './test-control/test-control.component';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
@@ -33,14 +34,12 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     MatSortModule,
     FormsModule,
     MatTabsModule,
-    MatStepper,
-    MatStep,
-    MatStepperNext,
-    MatStepLabel,
-    MatExpansionModule
+    MatStepperModule,
+    MatExpansionModule,
+    HttpClientModule
   ],
   providers: [
-    provideAnimationsAsync()
+    provideHttpClient(withFetch()) // HttpClient ve fetch özelliği sağlandı
   ],
   bootstrap: [AppComponent]
 })

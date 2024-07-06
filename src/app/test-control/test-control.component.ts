@@ -1,55 +1,56 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { ScenarioService } from '../scenario.service';
 import { TableData } from '../models/table-data.model';
-import {MatTableDataSource} from "@angular/material/table";
 
-interface Test{
+interface Test {
   name: string;
+  user: string;
   version: string;
   state: string;
   subItems?: Test[];
-
 }
 
 @Component({
   selector: 'app-test-control',
   templateUrl: './test-control.component.html',
-  styleUrl: './test-control.component.css'
+  styleUrls: ['./test-control.component.css']
 })
-export class TestControlComponent implements OnInit{
-  columns =['name','user' , 'version','state'];
-  data: TableData<Test>[]=[
-    new TableData({ name: 'deneme1', version: '2.3', state: 'geçti', subItems: [{ name: 'alt deneme1', version: '1.0', state: 'geçti' }] }),
-    new TableData({ name: 'deneme2', version: '20.3', state: 'test edilmedi', subItems: [{ name: 'alt deneme2', version: '1.1', state: 'test edilmedi' }] }),
-    new TableData({name:'deneme3', user: 'admin',version:'23.3',state:'geçti'}),
-    new TableData({name:'deneme4', user: 'admin',version:'21.4',state:'kaldı'}),
-    //new TableData({name:'deneme5',version:'22.8',state:'test edilmedi'}),
-  ];
-
-  dataSource : MatTableDataSource<TableData<Test>>;
+export class TestControlComponent implements OnInit {
+  columns = ['name', 'user', 'version', 'state'];
+  data: TableData<Test>[] = [];
+  dataSource: MatTableDataSource<TableData<Test>>;
   selectedTest: Test | null = null;
-  expandedElement: Test = null;
+  expandedElement: Test | null = null;
+
+  constructor(private scenarioService: ScenarioService) { }
 
   ngOnInit(): void {
-    this.dataSource= new MatTableDataSource(this.data);
+    this.getScenarios();
   }
 
-  onNameClick(test: Test) {
+  getScenarios(): void {
+    this.scenarioService.getScenarios().subscribe(
+      data => {
+        this.data = data.map(item => new TableData<Test>(item));
+        this.dataSource = new MatTableDataSource(this.data);
+      },
+      error => {
+        console.error('Error fetching scenarios', error);
+      }
+    );
+  }
+
+  onNameClick(test: Test): void {
     this.selectedTest = test;
   }
-  onRowClick(test: Test) {
+
+  onRowClick(test: Test): void {
     this.selectedTest = test;
     this.expandedElement = this.expandedElement === test ? null : test;
   }
 
-
-  closeStepper() {
+  closeStepper(): void {
     this.selectedTest = null;
   }
-
-
-
-
-
-
-
 }

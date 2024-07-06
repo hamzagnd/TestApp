@@ -1,11 +1,11 @@
-import { Component, Input,Output, OnInit, ViewChild,EventEmitter, AfterViewInit } from '@angular/core';
-import { NewMatTableDatasource } from '../new-mat-table-datasource';
+import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TableData } from '../models/table-data.model';
+import { ScenarioService } from '../scenario.service';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable'
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-generic-table',
@@ -14,30 +14,38 @@ import 'jspdf-autotable'
 })
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit {
   @Input() displayedColumns: string[] = [];
-  @Input({}) dataSource!: NewMatTableDatasource<TableData<T>>;
+  @Input() dataSource!: MatTableDataSource<TableData<T>>;
   newData: Partial<T> = {};
   @Output() rowClick = new EventEmitter<T>();
-
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  constructor(private scenarioService: ScenarioService) {}
 
-  ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    if (this.paginator && this.sort) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    } else {
+      console.error('Paginator or Sort is undefined');
+    }
   }
 
   addData() {
     const dataCopy: T = { ...this.newData } as T;
-    this.dataSource.data.push(new TableData(dataCopy));
-    this.dataSource.data = [...this.dataSource.data];
-    this.newData = {};
+    this.scenarioService.addScenario(dataCopy).subscribe(
+      response => {
+        this.dataSource.data.push(new TableData(dataCopy));
+        this.dataSource.data = [...this.dataSource.data];
+        this.newData = {};
+      },
+      error => {
+        console.error('Error adding scenario', error);
+      }
+    );
   }
 
   exportToPDF() {
@@ -54,6 +62,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     (doc as any).autoTable(columns, rows);
     doc.save('table.pdf');
   }
+
   onRowClick(row: TableData<T>) {
     this.rowClick.emit(row.data);
   }
@@ -61,6 +70,4 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   editRow(row: TableData<T>) {
     console.log('Düzenlenen satır:', row);
   }
-
-
 }
