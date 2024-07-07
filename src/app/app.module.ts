@@ -7,21 +7,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http'; // provideHttpClient ve withFetch import edildi
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatExpansionModule } from '@angular/material/expansion';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { GenericTableComponent } from './generic-table/generic-table.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatStepperModule } from '@angular/material/stepper'; // Doğru modül importu
+import { MatExpansionModule } from '@angular/material/expansion';
 import { TestControlComponent } from './test-control/test-control.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GenericTableComponent,
     TestControlComponent,
+    ScenarioStepperComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,14 +34,13 @@ import { TestControlComponent } from './test-control/test-control.component';
     MatPaginatorModule,
     MatSortModule,
     FormsModule,
+    ReactiveFormsModule, // ReactiveFormsModule'u ekleyin
     MatTabsModule,
-    MatStepperModule,
+    MatStepperModule, // Doğru modül importu
     MatExpansionModule,
-    HttpClientModule
+    HttpClientModule // HttpClientModule'ü ekleyin
   ],
-  providers: [
-    provideHttpClient(withFetch()) // HttpClient ve fetch özelliği sağlandı
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

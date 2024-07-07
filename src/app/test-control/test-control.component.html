@@ -1,1 +1,3 @@
 <app-generic-table [displayedColumns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)"></app-generic-table>
+
+<app-scenario-stepper *ngIf="selectedTest" [scenario]="selectedTest" (scenarioUpdated)="updateScenario($event)"></app-scenario-stepper>

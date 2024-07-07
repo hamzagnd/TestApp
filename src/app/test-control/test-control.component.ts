@@ -4,6 +4,7 @@ import { ScenarioService } from '../scenario.service';
 import { TableData } from '../models/table-data.model';
 
 interface Test {
+  id: number;
   name: string;
   user: string;
   version: string;
@@ -52,5 +53,21 @@ export class TestControlComponent implements OnInit {
 
   closeStepper(): void {
     this.selectedTest = null;
+  }
+
+  updateScenario(updatedScenario: Test): void {
+    this.scenarioService.updateScenario(updatedScenario).subscribe(
+      response => {
+        const index = this.data.findIndex(item => item.data.id === updatedScenario.id);
+        if (index !== -1) {
+          this.data[index] = new TableData<Test>(updatedScenario);
+          this.dataSource.data = [...this.data];
+        }
+        this.closeStepper();
+      },
+      error => {
+        console.error('Error updating scenario', error);
+      }
+    );
   }
 }

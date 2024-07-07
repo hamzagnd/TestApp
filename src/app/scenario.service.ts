@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ScenarioService {
-  private apiUrl = 'http://127.0.0.1:8000/api/scenarios/';
+  private apiUrl = 'http://127.0.0.1:8000/api/scenarios/'; // Django API URL'sini buraya yazın
 
   constructor(private http: HttpClient) { }
 
@@ -15,6 +15,10 @@ export class ScenarioService {
   }
 
   addScenario(scenario: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, scenario);
+    return this.http.post(this.apiUrl, scenario);
+  }
+
+  updateScenario(scenario: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}${scenario.id}/`, scenario);
   }
 }
