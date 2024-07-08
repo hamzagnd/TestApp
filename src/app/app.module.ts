@@ -19,6 +19,20 @@ import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.co
 import { UserAddComponent } from './user-add/user-add.component';
 import { MatDialogModule } from '@angular/material/dialog'; // Dialog modülü eklendi
 
+import { MenuComponent } from './menu/menu.component';
+import {MatSidenavContainer} from "@angular/material/sidenav";
+import {MatSidenav} from "@angular/material/sidenav";
+import {MatListItem, MatNavList} from "@angular/material/list";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+import { MatMenuModule } from'@angular/material/menu';
+import { MatIconModule } from'@angular/material/icon';
+import {RouterModule} from "@angular/router";
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +40,8 @@ import { MatDialogModule } from '@angular/material/dialog'; // Dialog modülü e
     TestControlComponent,
     ScenarioStepperComponent,
     UserAddComponent,
+    MenuComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -35,6 +51,7 @@ import { MatDialogModule } from '@angular/material/dialog'; // Dialog modülü e
     MatButtonModule,
     MatFormFieldModule,
     MatPaginatorModule,
+    MatSidenavModule,
     MatSortModule,
     FormsModule,
     ReactiveFormsModule,
@@ -43,8 +60,21 @@ import { MatDialogModule } from '@angular/material/dialog'; // Dialog modülü e
     MatExpansionModule,
     HttpClientModule,
     MatDialogModule // Dialog modülü eklendi
+
+    MatSidenavContainer,
+    MatSidenav,
+    MatNavList,
+    MatToolbar,
+    MatListItem,
+    MatIcon,
+
+    RouterModule,
+    MatIconModule,
+    MatMenuModule,
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
