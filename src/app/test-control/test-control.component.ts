@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ScenarioService } from '../scenario.service';
 import { TableData } from '../models/table-data.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ScenarioStepperComponent } from '../scenario-stepper/scenario-stepper.component';
 
 interface Test {
   id: number;
@@ -24,7 +26,7 @@ export class TestControlComponent implements OnInit {
   selectedTest: Test | null = null;
   expandedElement: Test | null = null;
 
-  constructor(private scenarioService: ScenarioService) { }
+  constructor(private scenarioService: ScenarioService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getScenarios();
@@ -44,11 +46,26 @@ export class TestControlComponent implements OnInit {
 
   onNameClick(test: Test): void {
     this.selectedTest = test;
+    this.openDialog();
   }
 
   onRowClick(test: Test): void {
     this.selectedTest = test;
     this.expandedElement = this.expandedElement === test ? null : test;
+    this.openDialog();
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ScenarioStepperComponent, {
+      width: '600px',
+      data: { scenario: this.selectedTest }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateScenario(result);
+      }
+    });
   }
 
   closeStepper(): void {

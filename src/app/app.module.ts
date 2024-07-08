@@ -11,11 +11,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { GenericTableComponent } from './generic-table/generic-table.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatStepperModule } from '@angular/material/stepper'; // Doğru modül importu
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TestControlComponent } from './test-control/test-control.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
+import { UserAddComponent } from './user-add/user-add.component';
+import { MatDialogModule } from '@angular/material/dialog'; // Dialog modülü eklendi
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.co
     GenericTableComponent,
     TestControlComponent,
     ScenarioStepperComponent,
+    UserAddComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,11 +37,12 @@ import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.co
     MatPaginatorModule,
     MatSortModule,
     FormsModule,
-    ReactiveFormsModule, // ReactiveFormsModule'u ekleyin
+    ReactiveFormsModule,
     MatTabsModule,
-    MatStepperModule, // Doğru modül importu
+    MatStepperModule,
     MatExpansionModule,
-    HttpClientModule // HttpClientModule'ü ekleyin
+    HttpClientModule,
+    MatDialogModule // Dialog modülü eklendi
   ],
   providers: [],
   bootstrap: [AppComponent]
