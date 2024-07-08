@@ -11,11 +11,24 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { GenericTableComponent } from './generic-table/generic-table.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatStepperModule } from '@angular/material/stepper'; // Doğru modül importu
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TestControlComponent } from './test-control/test-control.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
+import { MenuComponent } from './menu/menu.component';
+import {MatSidenavContainer} from "@angular/material/sidenav";
+import {MatSidenav} from "@angular/material/sidenav";
+import {MatListItem, MatNavList} from "@angular/material/list";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatIcon} from "@angular/material/icon";
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+import { MatMenuModule } from'@angular/material/menu';
+import { MatIconModule } from'@angular/material/icon';
+import {RouterModule} from "@angular/router";
+
 
 @NgModule({
   declarations: [
@@ -23,6 +36,7 @@ import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.co
     GenericTableComponent,
     TestControlComponent,
     ScenarioStepperComponent,
+    MenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,15 +46,28 @@ import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.co
     MatButtonModule,
     MatFormFieldModule,
     MatPaginatorModule,
+    MatSidenavModule,
     MatSortModule,
     FormsModule,
-    ReactiveFormsModule, // ReactiveFormsModule'u ekleyin
+    ReactiveFormsModule,
     MatTabsModule,
-    MatStepperModule, // Doğru modül importu
+    MatStepperModule,
     MatExpansionModule,
-    HttpClientModule // HttpClientModule'ü ekleyin
+    HttpClientModule,
+    MatSidenavContainer,
+    MatSidenav,
+    MatNavList,
+    MatToolbar,
+    MatListItem,
+    MatIcon,
+
+    RouterModule,
+    MatIconModule,
+    MatMenuModule,
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
