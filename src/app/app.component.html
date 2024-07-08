@@ -1,2 +1,5 @@
+<button mat-raised-button color="primary" (click)="showAddUserForm = true">Add User</button>
+<app-user-add *ngIf="showAddUserForm" (closeForm)="showAddUserForm = false"></app-user-add>
+
 <app-menu></app-menu>
 

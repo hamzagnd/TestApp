@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-scenario-stepper',
@@ -14,7 +15,11 @@ export class ScenarioStepperComponent implements OnInit {
   step2: FormGroup;
   step3: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<ScenarioStepperComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     this.step1 = this.fb.group({
       name: ['', Validators.required]
     });
@@ -25,6 +30,10 @@ export class ScenarioStepperComponent implements OnInit {
       version: ['', Validators.required],
       state: ['', Validators.required]
     });
+
+    if (data) {
+      this.scenario = data.scenario;
+    }
   }
 
   ngOnInit(): void {
@@ -58,5 +67,10 @@ export class ScenarioStepperComponent implements OnInit {
       ...this.step3.value
     };
     this.scenarioUpdated.emit(updatedScenario);
+    this.dialogRef.close(updatedScenario);
+  }
+
+  onCancel(): void {
+    this.dialogRef.close();
   }
 }

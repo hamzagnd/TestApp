@@ -16,6 +16,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { TestControlComponent } from './test-control/test-control.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
+import { UserAddComponent } from './user-add/user-add.component';
+import { MatDialogModule } from '@angular/material/dialog'; // Dialog modülü eklendi
+
 import { MenuComponent } from './menu/menu.component';
 import {MatSidenavContainer} from "@angular/material/sidenav";
 import {MatSidenav} from "@angular/material/sidenav";
@@ -36,7 +39,9 @@ import {RouterModule} from "@angular/router";
     GenericTableComponent,
     TestControlComponent,
     ScenarioStepperComponent,
+    UserAddComponent,
     MenuComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -54,6 +59,8 @@ import {RouterModule} from "@angular/router";
     MatStepperModule,
     MatExpansionModule,
     HttpClientModule,
+    MatDialogModule // Dialog modülü eklendi
+
     MatSidenavContainer,
     MatSidenav,
     MatNavList,

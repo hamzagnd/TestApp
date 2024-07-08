@@ -9,6 +9,7 @@ import { ScenarioService } from './scenario.service';
 export class AppComponent implements OnInit {
   title = 'Angular TestApp';
   scenarios: any[] = [];
+  showAddUserForm = false;
 
   constructor(private scenarioService: ScenarioService) { }
 
