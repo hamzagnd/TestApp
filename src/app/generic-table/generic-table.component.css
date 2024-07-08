@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mat-table {
+  width: 100%;
+  height: calc(100% - 64px); /* toolbar yüksekliği kadar eksik */
+  overflow: auto;
+}

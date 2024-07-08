@@ -14,7 +14,7 @@ import 'jspdf-autotable';
 })
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit {
   @Input() displayedColumns: string[] = [];
-  @Input() dataSource!: MatTableDataSource<TableData<T>>;
+  @Input() dataSource: MatTableDataSource<TableData<T>>;
   newData: Partial<T> = {};
   @Output() rowClick = new EventEmitter<T>();
 
