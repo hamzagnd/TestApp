@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   }
 
   addScenario(): void {
-    const newScenario = { name: 'New Scenario', user: 'User1', version: '1.0', state: 'Active' }; // Örnek senaryo verisi
+    const newScenario = { name: 'New Scenario', user: 'User1', version: '1.0', state: 'Active' }; 
     this.scenarioService.addScenario(newScenario).subscribe(
       data => {
         this.scenarios.push(data);

@@ -1,30 +1,43 @@
-<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="fill">
-      <mat-label>Username</mat-label>
-      <input matInput formControlName="username" required>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" required>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>First Name</mat-label>
-      <input matInput formControlName="first_name" required>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Last Name</mat-label>
-      <input matInput formControlName="last_name" required>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Password</mat-label>
-      <input matInput formControlName="password" required type="password">
-    </mat-form-field>
-  
-    <button mat-raised-button color="primary" type="submit">Add User</button>
-    <button mat-raised-button color="warn" type="button" (click)="onCancel()">Cancel</button>
-  </form>
-  
+<mat-dialog-content class="user-card">
+  <mat-card-header>
+    <mat-card-title>Add New User</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="first_name" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="last_name" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" required type="password">
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">Add User</button>
+        <button mat-raised-button color="warn" type="button" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-dialog-content>
+
+<!-- Success message -->
+<div *ngIf="successMessage" class="success-message">
+  {{ successMessage }}
+</div>

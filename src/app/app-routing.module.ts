@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TestControlComponent } from './test-control/test-control.component';
-import { ReportTableComponent } from './report-table/report-table.component';
+import { UserAddComponent } from './user-add/user-add.component';
+import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 
 const routes: Routes = [
-  { path: 'test', component: TestControlComponent },
-  { path: 'report', component: ReportTableComponent },
-  { path: '', redirectTo: '/test', pathMatch: 'full' } // Varsayılan olarak test yönlendirmesi
+  { path: 'test-control', component: TestControlComponent },
+  { path: 'user-add', component: UserAddComponent },
+  { path: 'scenario-stepper', component: ScenarioStepperComponent },
+  { path: '', redirectTo: '/test-control', pathMatch: 'full' },
 ];
 
 @NgModule({
