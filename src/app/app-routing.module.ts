@@ -6,7 +6,7 @@ import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.co
 import { ReportTableComponent } from './report-table/report-table.component';
 
 const routes: Routes = [
-  { path: 'test-control', component: TestControlComponent },
+  { path: 'test', component: TestControlComponent },
   { path: 'user-add', component: UserAddComponent },
   { path: 'scenario-stepper', component: ScenarioStepperComponent },
   { path: 'report', component: ReportTableComponent },
