@@ -32,6 +32,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatMenuModule } from'@angular/material/menu';
 import { MatIconModule } from'@angular/material/icon';
 import {RouterModule} from "@angular/router";
+import { ReportTableComponent } from './report-table/report-table.component';
+import { AppRoutingModule } from './app-routing.module';
+
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { MatCardModule } from '@angular/material/card'; 
 import { MatDividerModule } from '@angular/material/divider'; 
@@ -46,6 +50,7 @@ import { MatDividerModule } from '@angular/material/divider';
     ScenarioStepperComponent,
     UserAddComponent,
     MenuComponent,
+    ReportTableComponent,
 
   ],
   imports: [
@@ -79,10 +84,13 @@ import { MatDividerModule } from '@angular/material/divider';
     RouterModule,
     MatIconModule,
     MatMenuModule,
-    MatDividerModule
+    
+    NgxChartsModule,
+
+    MatDividerModule,
   ],
   providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent]
 })

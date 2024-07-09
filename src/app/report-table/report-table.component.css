@@ -1,0 +1,34 @@
+::ng-deep .passed-state {
+  color: green;
+}
+
+::ng-deep .failed-state {
+  color: red;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  margin-bottom: 20px;
+}
+
+.donut-chart-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.donut-chart {
+  width: 800px;
+  height: 600px;
+}
+
+.mat-tab-group {
+  margin-bottom: 20px; /* mat-tab-group ile aşağıdaki içerik arasındaki boşluk */
+}
+
+.table-container {
+  margin-top: 20px; /* mat-tab-group ile tablonun üst kısmı arasındaki boşluk */
+}
