@@ -17,7 +17,7 @@ import { TestControlComponent } from './test-control/test-control.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
-import { MatDialogModule } from '@angular/material/dialog'; // Dialog modülü eklendi
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { MenuComponent } from './menu/menu.component';
 import {MatSidenavContainer} from "@angular/material/sidenav";
@@ -31,6 +31,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatMenuModule } from'@angular/material/menu';
 import { MatIconModule } from'@angular/material/icon';
 import {RouterModule} from "@angular/router";
+import { ReportTableComponent } from './report-table/report-table.component';
+import { AppRoutingModule } from './app-routing.module';
+
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 @NgModule({
@@ -41,6 +45,7 @@ import {RouterModule} from "@angular/router";
     ScenarioStepperComponent,
     UserAddComponent,
     MenuComponent,
+    ReportTableComponent,
 
   ],
   imports: [
@@ -59,7 +64,7 @@ import {RouterModule} from "@angular/router";
     MatStepperModule,
     MatExpansionModule,
     HttpClientModule,
-    MatDialogModule // Dialog modülü eklendi
+    MatDialogModule,
 
     MatSidenavContainer,
     MatSidenav,
@@ -71,9 +76,11 @@ import {RouterModule} from "@angular/router";
     RouterModule,
     MatIconModule,
     MatMenuModule,
+    AppRoutingModule,
+    NgxChartsModule
   ],
   providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent]
 })

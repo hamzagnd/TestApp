@@ -21,7 +21,7 @@ html, body, mat-sidenav-container, mat-sidenav, .example-sidenav-content {
   overflow: auto;
   display: flex;
   justify-content: center;
-  align-items: center;
+
 }
 
 .mat-toolbar {
