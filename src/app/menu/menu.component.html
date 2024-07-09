@@ -14,7 +14,7 @@
       <div class="submenu" [ngClass]="{'expanded' : showSubmenu}" *ngIf="isShowing || isExpanded">
         <a mat-list-item [routerLink]="['/test']">Test</a>
         <a mat-list-item [routerLink]="['/report']">Rapor</a>
-        <mat-list-item>Kullanıcı Ekleme</mat-list-item>
+        <a mat-list-item (click)="openUserAddDialog()">Add User</a>
 
       </div>
     </mat-nav-list>
