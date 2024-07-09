@@ -1,38 +1,30 @@
 <mat-toolbar color="primary" class="example-toolbar">
   <button mat-icon-button (click)="isExpanded = !isExpanded"><mat-icon>menu</mat-icon></button>
-  <h1 class="example-app-name">Menü</h1>
+  <h1 class="example-app-name">Menu</h1>
 </mat-toolbar>
 <mat-sidenav-container class="example-container" autosize>
   <mat-sidenav #sidenav class="example-sidenav" mode="side" opened="true" (mouseenter)="mouseenter()" (mouseleave)="mouseleave()">
     <mat-nav-list>
       <mat-list-item (click)="showSubmenu = !showSubmenu" class="parent">
         <mat-icon mat-list-icon>home</mat-icon>
-
-        <span class="full-width" *ngIf="isExpanded || isShowing">Ana Menü</span>
+        <span class="full-width" *ngIf="isExpanded || isShowing">Main Menu</span>
         <mat-icon class="menu-button" [ngClass]="{'rotated' : showSubmenu}" *ngIf="isExpanded || isShowing">expand_more</mat-icon>
       </mat-list-item>
       <div class="submenu" [ngClass]="{'expanded' : showSubmenu}" *ngIf="isShowing || isExpanded">
-        <a mat-list-item href="...">Test</a>
-        <a mat-list-item href="...">Rapor</a>
+        <a mat-list-item routerLink="/test-control">Test Control</a>
+        <a mat-list-item routerLink="/report">Report</a>
         <mat-list-item (click)="showSubSubMenu = !showSubSubMenu" class="parent">
           <span class="full-width" *ngIf="isExpanded || isShowing">Nested Menu</span>
           <mat-icon class="menu-button" [ngClass]="{'rotated' : showSubSubMenu}" *ngIf="isExpanded || isShowing">expand_more</mat-icon>
         </mat-list-item>
         <div class="submenu" [ngClass]="{'expanded' : showSubSubMenu}" *ngIf="isShowing || isExpanded">
-          <mat-list-item>Add User</mat-list-item>
-          
+          <a mat-list-item (click)="openUserAddDialog()">Add User</a>
         </div>
       </div>
-    </mat-nav-list>
-    <mat-nav-list>
     </mat-nav-list>
   </mat-sidenav>
 
   <div class="example-sidenav-content">
-    <app-test-control></app-test-control>
+    <router-outlet></router-outlet>
   </div>
-
 </mat-sidenav-container>
-
-
-

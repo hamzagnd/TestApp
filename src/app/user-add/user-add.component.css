@@ -1,0 +1,32 @@
+.user-card {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+  }
+  
+  .user-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .form-actions button {
+    margin-left: 10px;
+  }
+  
+  .success-message {
+    margin-top: 20px;
+    text-align: center;
+    color: green;
+    font-weight: bold;
+  }
+  

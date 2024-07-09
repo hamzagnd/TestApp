@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../user.service';
 
 @Component({
@@ -9,9 +10,10 @@ import { UserService } from '../user.service';
 })
 export class UserAddComponent implements OnInit {
   userForm: FormGroup;
+  successMessage: string;
   @Output() closeForm = new EventEmitter<void>();
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
+  constructor(private fb: FormBuilder, private userService: UserService, private dialogRef: MatDialogRef<UserAddComponent>) {
     this.userForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -27,9 +29,10 @@ export class UserAddComponent implements OnInit {
     if (this.userForm.valid) {
       this.userService.addUser(this.userForm.value).subscribe(
         response => {
-          console.log('User added successfully', response);
-          this.userForm.reset();
-          this.closeForm.emit();
+          this.successMessage = 'User added successfully';
+          setTimeout(() => {
+            this.dialogRef.close();
+          }, 2000);
         },
         error => {
           console.error('Error adding user', error);
@@ -39,6 +42,6 @@ export class UserAddComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.closeForm.emit();
+    this.dialogRef.close();
   }
 }
