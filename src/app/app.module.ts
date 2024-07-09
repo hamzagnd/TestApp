@@ -18,6 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
 import { MatDialogModule } from '@angular/material/dialog'; 
+import { AppRoutingModule } from './app-routing.module';  
 
 import { MenuComponent } from './menu/menu.component';
 import {MatSidenavContainer} from "@angular/material/sidenav";
@@ -72,6 +73,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatListItem,
     MatIcon,
     MatCardModule, 
+    AppRoutingModule,
     
 
     RouterModule,

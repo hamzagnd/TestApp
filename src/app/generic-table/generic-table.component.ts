@@ -18,20 +18,16 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   newData: Partial<T> = {};
   @Output() rowClick = new EventEmitter<T>();
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private scenarioService: ScenarioService) {}
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    if (this.paginator && this.sort) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    } else {
-      console.error('Paginator or Sort is undefined');
-    }
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   addData() {
@@ -68,6 +64,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   }
 
   editRow(row: TableData<T>) {
-    console.log('Düzenlenen satır:', row);
+    console.log('Editing row:', row);
   }
 }

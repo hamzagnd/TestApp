@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'test-control', component: TestControlComponent },
   { path: 'user-add', component: UserAddComponent },
   { path: 'scenario-stepper', component: ScenarioStepperComponent },
-  { path: '', redirectTo: '/test-control', pathMatch: 'full' }
+  { path: '', redirectTo: '/test-control', pathMatch: 'full' },
 ];
 
 @NgModule({
