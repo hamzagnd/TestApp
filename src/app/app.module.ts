@@ -17,8 +17,8 @@ import { TestControlComponent } from './test-control/test-control.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
-import { MatDialogModule } from '@angular/material/dialog'; 
-import { AppRoutingModule } from './app-routing.module';  
+import { MatDialogModule } from '@angular/material/dialog';
+import { AppRoutingModule } from './app-routing.module';
 
 import { MenuComponent } from './menu/menu.component';
 import {MatSidenavContainer} from "@angular/material/sidenav";
@@ -33,12 +33,11 @@ import { MatMenuModule } from'@angular/material/menu';
 import { MatIconModule } from'@angular/material/icon';
 import {RouterModule} from "@angular/router";
 import { ReportTableComponent } from './report-table/report-table.component';
-import { AppRoutingModule } from './app-routing.module';
 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
-import { MatCardModule } from '@angular/material/card'; 
-import { MatDividerModule } from '@angular/material/divider'; 
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 
@@ -77,14 +76,14 @@ import { MatDividerModule } from '@angular/material/divider';
     MatToolbar,
     MatListItem,
     MatIcon,
-    MatCardModule, 
+    MatCardModule,
     AppRoutingModule,
-    
+
 
     RouterModule,
     MatIconModule,
     MatMenuModule,
-    
+
     NgxChartsModule,
 
     MatDividerModule,
