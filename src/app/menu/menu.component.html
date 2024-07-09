@@ -7,19 +7,15 @@
     <mat-nav-list>
       <mat-list-item (click)="showSubmenu = !showSubmenu" class="parent">
         <mat-icon mat-list-icon>home</mat-icon>
-        <span class="full-width" *ngIf="isExpanded || isShowing">Main Menu</span>
+
+        <span class="full-width" *ngIf="isExpanded || isShowing">Ana Menü</span>
         <mat-icon class="menu-button" [ngClass]="{'rotated' : showSubmenu}" *ngIf="isExpanded || isShowing">expand_more</mat-icon>
       </mat-list-item>
       <div class="submenu" [ngClass]="{'expanded' : showSubmenu}" *ngIf="isShowing || isExpanded">
-        <a mat-list-item routerLink="/test-control">Test Control</a>
-        <a mat-list-item routerLink="/report">Report</a>
-        <mat-list-item (click)="showSubSubMenu = !showSubSubMenu" class="parent">
-          <span class="full-width" *ngIf="isExpanded || isShowing">Nested Menu</span>
-          <mat-icon class="menu-button" [ngClass]="{'rotated' : showSubSubMenu}" *ngIf="isExpanded || isShowing">expand_more</mat-icon>
-        </mat-list-item>
-        <div class="submenu" [ngClass]="{'expanded' : showSubSubMenu}" *ngIf="isShowing || isExpanded">
-          <a mat-list-item (click)="openUserAddDialog()">Add User</a>
-        </div>
+        <a mat-list-item [routerLink]="['/test']">Test</a>
+        <a mat-list-item [routerLink]="['/report']">Rapor</a>
+        <mat-list-item>Kullanıcı Ekleme</mat-list-item>
+
       </div>
     </mat-nav-list>
   </mat-sidenav>
@@ -28,3 +24,4 @@
     <router-outlet></router-outlet>
   </div>
 </mat-sidenav-container>
+
