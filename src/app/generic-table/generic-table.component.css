@@ -6,6 +6,6 @@
 
 .mat-table {
   width: 100%;
-  height: calc(100% - 64px); /* toolbar yüksekliği kadar eksik */
+  height: calc(100% - 64px); 
   overflow: auto;
 }
