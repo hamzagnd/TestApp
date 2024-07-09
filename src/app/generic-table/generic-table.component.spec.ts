@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GenericTableComponent } from './generic-table.component';
 
 describe('GenericTableComponent', () => {
-  let component: GenericTableComponent<any>; // Burada any veya kullanmak istediğiniz türü belirtin
+  let component: GenericTableComponent<any>; 
   let fixture: ComponentFixture<GenericTableComponent<any>>;
 
   beforeEach(async () => {
@@ -13,7 +13,7 @@ describe('GenericTableComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GenericTableComponent<any>); // Burada any veya kullanmak istediğiniz türü belirtin
+    fixture = TestBed.createComponent(GenericTableComponent<any>); 
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
