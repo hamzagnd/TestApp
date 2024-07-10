@@ -10,9 +10,9 @@
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
     <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'passed-state': column === 'state' && element.data[column] === 'geçti', 'failed-state': column === 'state' && element.data[column] === 'kaldı'}"> {{element.data[column]}} </td>
-
     <td mat-cell *matCellDef="let element" (click)="onRowClick(element)"> {{element.data[column]}} </td>
+    <!--<td mat-cell *matCellDef="let element" [ngClass]="{'passed-state': column === 'state' && element.data[column] === 'geçti', 'failed-state': column === 'state' && element.data[column] === 'kaldı'}"> {{element.data[column]}} </td>-->
+
   </ng-container>
 
   <ng-container matColumnDef="edit">
