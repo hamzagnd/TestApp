@@ -1,6 +1,6 @@
 import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TableData } from '../models/table-data.model';
 import { ScenarioService } from '../scenario.service';
@@ -14,20 +14,43 @@ import 'jspdf-autotable';
 })
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit {
   @Input() displayedColumns: string[] = [];
-  @Input() dataSource: MatTableDataSource<TableData<T>>;
+  @Input() dataSource: MatTableDataSource<TableData<T>> = new MatTableDataSource<TableData<T>>([]);
   newData: Partial<T> = {};
   @Output() rowClick = new EventEmitter<T>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  length = 0;
+  pageSize = 5;
+  pageSizeOptions: number[] = [5, 10, 20];
 
   constructor(private scenarioService: ScenarioService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.fetchScenarios();
+  }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  fetchScenarios(): void {
+    this.scenarioService.getScenarios().subscribe(
+      scenarios => {
+        this.dataSource.data = scenarios.map(scenario => new TableData(scenario));
+        this.length = this.dataSource.data.length; // Gelen veri uzunluğuna göre paginator'u ayarlayın
+      },
+      error => {
+        console.error('Error fetching scenarios', error);
+      }
+    );
+  }
+
+  handlePageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.length = event.length;
   }
 
   addData() {
@@ -37,6 +60,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
         this.dataSource.data.push(new TableData(dataCopy));
         this.dataSource.data = [...this.dataSource.data];
         this.newData = {};
+        this.length = this.dataSource.data.length; // Güncellenen veri uzunluğunu belirleyin
       },
       error => {
         console.error('Error adding scenario', error);
