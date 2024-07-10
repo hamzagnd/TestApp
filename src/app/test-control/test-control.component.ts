@@ -22,7 +22,7 @@ interface Test {
 export class TestControlComponent implements OnInit {
   columns = ['name', 'user', 'version', 'state'];
   data: TableData<Test>[] = [];
-  dataSource: MatTableDataSource<TableData<Test>>;
+  dataSource: MatTableDataSource<TableData<Test>> = new MatTableDataSource<TableData<Test>>();
   selectedTest: Test | null = null;
   expandedElement: Test | null = null;
 
@@ -36,7 +36,7 @@ export class TestControlComponent implements OnInit {
     this.scenarioService.getScenarios().subscribe(
       data => {
         this.data = data.map(item => new TableData<Test>(item));
-        this.dataSource = new MatTableDataSource(this.data);
+        this.dataSource.data = this.data;
       },
       error => {
         console.error('Error fetching scenarios', error);
