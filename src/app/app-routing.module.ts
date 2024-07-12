@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TestControlComponent } from './test-control/test-control.component';
-import { UserAddComponent } from './user-add/user-add.component';
-import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { ReportTableComponent } from './report-table/report-table.component';
+import { UsersComponent } from './users/users.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-  { path: 'test', component: TestControlComponent },
-  { path: 'user-add', component: UserAddComponent },
-  { path: 'scenario-stepper', component: ScenarioStepperComponent },
-  { path: 'report', component: ReportTableComponent },
-  { path: '', redirectTo: '/test-control', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'test', component: TestControlComponent, canActivate: [AuthGuard] },
+  { path: 'report', component: ReportTableComponent, canActivate: [AuthGuard] },
+  { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({

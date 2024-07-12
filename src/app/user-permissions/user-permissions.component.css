@@ -1,0 +1,19 @@
+.permissions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .permission-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  

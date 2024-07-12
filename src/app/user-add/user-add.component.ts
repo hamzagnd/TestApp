@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../user.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-add',
@@ -10,10 +10,13 @@ import { UserService } from '../user.service';
 })
 export class UserAddComponent implements OnInit {
   userForm: FormGroup;
-  successMessage: string;
   @Output() closeForm = new EventEmitter<void>();
 
-  constructor(private fb: FormBuilder, private userService: UserService, private dialogRef: MatDialogRef<UserAddComponent>) {
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    public dialogRef: MatDialogRef<UserAddComponent>
+  ) {
     this.userForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -29,10 +32,9 @@ export class UserAddComponent implements OnInit {
     if (this.userForm.valid) {
       this.userService.addUser(this.userForm.value).subscribe(
         response => {
-          this.successMessage = 'User added successfully';
-          setTimeout(() => {
-            this.dialogRef.close();
-          }, 2000);
+          console.log('User added successfully', response);
+          this.userForm.reset();
+          this.dialogRef.close(response); // Close the dialog and pass the result
         },
         error => {
           console.error('Error adding user', error);
@@ -42,6 +44,6 @@ export class UserAddComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(); // Close the dialog without any result
   }
 }

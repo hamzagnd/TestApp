@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Update User Permissions</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Username</mat-label>
+    <input matInput [(ngModel)]="user.username" disabled>
+  </mat-form-field>
+  <div class="permissions-container">
+    <div class="permission-item">
+      <span>Edit Permission:</span>
+      <mat-radio-group [(ngModel)]="user.can_edit">
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="permission-item">
+      <span>Delete Permission:</span>
+      <mat-radio-group [(ngModel)]="user.can_delete">
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="savePermissions()">Save</button>
+</mat-dialog-actions>

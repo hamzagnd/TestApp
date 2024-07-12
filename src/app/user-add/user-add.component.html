@@ -1,5 +1,6 @@
-<mat-dialog-content class="user-card">
+<mat-card class="user-card">
   <mat-card-header>
+    <mat-card-title>Add New User</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
@@ -34,8 +35,4 @@
       </div>
     </form>
   </mat-card-content>
-</mat-dialog-content>
-
-<div *ngIf="successMessage" class="success-message">
-  {{ successMessage }}
-</div>
+</mat-card>
