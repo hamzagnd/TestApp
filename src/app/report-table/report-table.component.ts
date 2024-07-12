@@ -4,6 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 interface Test {
   name: string;
+  owner: string;
+  time: string;
   state: string;
 }
 
@@ -14,19 +16,17 @@ interface Test {
 })
 export class ReportTableComponent implements OnInit {
 
-  columns = ['name', 'owner','time','state'];
+  columns = ['name', 'owner', 'time', 'state'];
   data: TableData<Test>[] = [
-    new TableData({ name: 'deneme1',owner: 'admin',time: '20-11-2023',state: 'geçti' }),
-    new TableData({ name: 'deneme2',owner: 'admin',time: '20-11-2023', state: 'kaldı' }),
+    new TableData({ name: 'deneme1', owner: 'admin', time: '20-11-2023', state: 'geçti' }),
+    new TableData({ name: 'deneme2', owner: 'admin', time: '20-11-2023', state: 'kaldı' }),
+    new TableData({ name: 'deneme3', owner: 'admin', time: '20-11-2023', state: 'Test Edilmedi' }),
   ];
   dataSource: MatTableDataSource<TableData<Test>>;
-  selectedTest: Test | null = null;
-  expandedElement: Test = null;
 
   // Donut Chart Variables
   public donutChartData: any[] = [];
-  public donutChartLabels: string[] = ['Geçti', 'Kaldı'];
-  public donutChartType: string = 'doughnut';
+  public donutChartLabels: string[] = ['Geçti', 'Kaldı', 'Test Edilmedi'];
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.data);
@@ -34,28 +34,20 @@ export class ReportTableComponent implements OnInit {
   }
 
   onRowClick(test: Test) {
-    this.selectedTest = test;
-    this.expandedElement = this.expandedElement === test ? null : test;
+    console.log('Row clicked:', test);
   }
+
+
 
   // Update Donut Chart Data
   updateDonutChartData() {
     const passed = this.data.filter(item => item.data.state === 'geçti').length;
     const failed = this.data.filter(item => item.data.state === 'kaldı').length;
+    const noTested = this.data.filter(item => item.data.state === 'Test Edilmedi').length;
     this.donutChartData = [
       { name: 'Geçti', value: passed },
-      { name: 'Kaldı', value: failed }
+      { name: 'Kaldı', value: failed },
+      { name: 'Test Edilmedi', value: noTested }
     ];
-    console.log(this.donutChartData);
-  }
-  getStateClass(state: string): string {
-    if (state === 'geçti') {
-      return 'passed-state';
-    } else if (state === 'kaldı') {
-      return 'failed-state';
-    } else {
-      return '';
-    }
   }
 }
-

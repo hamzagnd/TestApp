@@ -6,6 +6,34 @@
 
 .mat-table {
   width: 100%;
-  height: calc(100% - 64px); 
+  height: calc(100% - 64px);
   overflow: auto;
+  text-align: center;
+
 }
+.passed-state {
+  background-color: #98FB98;
+  color: black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.failed-state {
+  background-color: #FF6F6F;
+  color: black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.not-run-state {
+  background-color: #FFA500;
+  color: black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.mat-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+

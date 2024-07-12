@@ -17,8 +17,8 @@ import { HttpClientModule} from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
 
-import { MatDialogModule } from '@angular/material/dialog'; 
-import { AppRoutingModule } from './app-routing.module';  
+import { MatDialogModule } from '@angular/material/dialog';
+import { AppRoutingModule } from './app-routing.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MenuComponent } from './menu/menu.component';
 import {MatSidenavContainer} from "@angular/material/sidenav";
@@ -37,6 +37,8 @@ import { ReportTableComponent } from './report-table/report-table.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+
 
 
 
@@ -49,6 +51,7 @@ import { MatDividerModule } from '@angular/material/divider';
     UserAddComponent,
     MenuComponent,
     ReportTableComponent,
+    EditDialogComponent,
 
   ],
   imports: [
@@ -78,7 +81,6 @@ import { MatDividerModule } from '@angular/material/divider';
     MatCardModule,
     AppRoutingModule,
 
-
     RouterModule,
     MatIconModule,
     MatMenuModule,
@@ -87,9 +89,8 @@ import { MatDividerModule } from '@angular/material/divider';
 
     MatDividerModule,
   ],
-  providers: [
-    provideAnimationsAsync(),
-  ],
-  bootstrap: [AppComponent]
+  providers: [provideAnimationsAsync(),],
+  bootstrap: [AppComponent],
+  //entryComponents: [EditDialogComponent]
 })
 export class AppModule { }
