@@ -1,6 +1,6 @@
 import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TableData } from '../models/table-data.model';
@@ -17,16 +17,23 @@ import 'jspdf-autotable';
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit {
   @Input() displayedColumns: string[] = [];
   @Input() dataSource: MatTableDataSource<TableData<T>> = new MatTableDataSource<TableData<T>>([]);
-  @Output() rowClick = new EventEmitter<T>();
+
 
   newData: Partial<T> = {};
+  @Output() rowClick = new EventEmitter<T>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  length = 0;
+  pageSize = 5;
+  pageSizeOptions: number[] = [5, 10, 20];
 
   constructor(private scenarioService: ScenarioService, public dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.fetchScenarios();
+  }
 
   ngAfterViewInit(): void {
     if (this.paginator && this.sort) {
@@ -37,6 +44,23 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     }
   }
 
+  fetchScenarios(): void {
+    this.scenarioService.getScenarios().subscribe(
+      scenarios => {
+        this.dataSource.data = scenarios.map(scenario => new TableData(scenario));
+        this.length = this.dataSource.data.length; // Gelen veri uzunluğuna göre paginator'u ayarlayın
+      },
+      error => {
+        console.error('Error fetching scenarios', error);
+      }
+    );
+  }
+
+  handlePageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.length = event.length;
+  }
+
   addData() {
     const dataCopy: T = { ...this.newData } as T;
     this.scenarioService.addScenario(dataCopy).subscribe(
@@ -44,6 +68,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
         this.dataSource.data.push(new TableData(dataCopy));
         this.dataSource.data = [...this.dataSource.data];
         this.newData = {};
+        this.length = this.dataSource.data.length; // Güncellenen veri uzunluğunu belirleyin
       },
       error => {
         console.error('Error adding scenario', error);

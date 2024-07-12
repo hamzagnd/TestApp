@@ -35,7 +35,6 @@ import {RouterModule} from "@angular/router";
 import { ReportTableComponent } from './report-table/report-table.component';
 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
