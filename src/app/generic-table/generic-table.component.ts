@@ -2,8 +2,10 @@ import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewIni
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
 import { TableData } from '../models/table-data.model';
 import { ScenarioService } from '../scenario.service';
+import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -14,20 +16,25 @@ import 'jspdf-autotable';
 })
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit {
   @Input() displayedColumns: string[] = [];
-  @Input() dataSource: MatTableDataSource<TableData<T>>;
-  newData: Partial<T> = {};
+  @Input() dataSource: MatTableDataSource<TableData<T>> = new MatTableDataSource<TableData<T>>([]);
   @Output() rowClick = new EventEmitter<T>();
+
+  newData: Partial<T> = {};
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private scenarioService: ScenarioService) {}
+  constructor(private scenarioService: ScenarioService, public dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    if (this.paginator && this.sort) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    } else {
+      console.error('Paginator or Sort is undefined');
+    }
   }
 
   addData() {
@@ -64,6 +71,32 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   }
 
   editRow(row: TableData<T>) {
-    console.log('Editing row:', row);
+    const dialogRef = this.dialog.open(EditDialogComponent, {
+      width: '250px',
+      data: { row: { ...row.data }, displayedColumns: this.displayedColumns }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        row.data = { ...result };
+        this.dataSource.data = [...this.dataSource.data];
+      }
+    });
+  }
+  runRow(element: TableData<T>) {
+    // Run işlemlerini buraya ekleyin
+    console.log('Run Row:', element);
+  }
+
+  getStateClass(state: string): string {
+    if (state === 'geçti') {
+      return 'passed-state';
+    } else if (state === 'kaldı') {
+      return 'failed-state';
+    } else if (state === 'Test Edilmedi') {
+      return 'not-run-state';
+    } else {
+      return '';
+    }
   }
 }
