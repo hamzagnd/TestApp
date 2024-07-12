@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Edit Row</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" *ngFor="let column of data.displayedColumns">
+    <mat-label>{{ column }}</mat-label>
+    <input matInput [(ngModel)]="data.row[column]" placeholder="{{ column }}">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button color="primary" (click)="onSave()">Save</button>
+</div>

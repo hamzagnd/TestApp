@@ -16,6 +16,7 @@ import { TestControlComponent } from './test-control/test-control.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
+
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppRoutingModule } from './app-routing.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -34,11 +35,17 @@ import { UsersComponent } from './users/users.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+
 import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth.guard'; // Add AuthGuard
+
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+
+
+
 
 @NgModule({
   declarations: [
@@ -49,9 +56,12 @@ import { AuthGuard } from './auth.guard'; // Add AuthGuard
     UserAddComponent,
     MenuComponent,
     ReportTableComponent,
+
     UsersComponent,
     UserPermissionsComponent,
     LoginComponent,
+    EditDialogComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -59,7 +69,7 @@ import { AuthGuard } from './auth.guard'; // Add AuthGuard
     MatTableModule,
     MatInputModule,
     MatButtonModule,
-    MatFormFieldModule,
+    MatFormFieldModule,>>>>>>> master
     MatPaginatorModule,
     MatSidenavModule,
     MatSortModule,
@@ -78,6 +88,7 @@ import { AuthGuard } from './auth.guard'; // Add AuthGuard
     MatIcon,
     MatCardModule,
     AppRoutingModule,
+
     RouterModule,
     MatIconModule,
     MatMenuModule,
@@ -86,9 +97,11 @@ import { AuthGuard } from './auth.guard'; // Add AuthGuard
     MatCheckboxModule,
     MatRadioModule,
   ],
-  providers: [
-    AuthGuard, // Register AuthGuard
-  ],
-  bootstrap: [AppComponent]
+
+  providers: [ AuthGuard, // Register AuthGuard ],
+
+  bootstrap: [AppComponent],
+  //entryComponents: [EditDialogComponent]
+
 })
 export class AppModule { }

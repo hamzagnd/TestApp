@@ -1,22 +1,18 @@
-<div class="tab-container">
-  <mat-tab-group>
-    <mat-tab label="Tablo">
-      <div class="table-container">
-        <app-generic-table [displayedColumns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)">
-        </app-generic-table>
-      </div>
-    </mat-tab>
-    <mat-tab label="Chart">
-      <div class="donut-chart-container">
-        <ngx-charts-pie-chart
-          class="donut-chart"
-          [results]="donutChartData"
-          [legend]="true"
-          [labels]="true"
-          [doughnut]="true">
-        </ngx-charts-pie-chart>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-</div>
-
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="Tablo">
+    <div class="table-container">
+      <app-generic-table [displayedColumns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)"></app-generic-table>
+    </div>
+  </mat-tab>
+  <mat-tab label="Chart">
+    <div class="donut-chart-container">
+      <ngx-charts-pie-chart
+        class="donut-chart"
+        [results]="donutChartData"
+        [legend]="true"
+        [labels]="true"
+        [doughnut]="true">
+      </ngx-charts-pie-chart>
+    </div>
+  </mat-tab>
+</mat-tab-group>

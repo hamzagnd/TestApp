@@ -21,4 +21,5 @@ export class ScenarioService {
   updateScenario(scenario: any): Observable<any> {
     return this.http.put(`${this.apiUrl}${scenario.id}/`, scenario);
   }
+
 }

@@ -1,47 +1,36 @@
+<!-- scenario-stepper.component.html -->
 <mat-card class="stepper-card">
   <mat-horizontal-stepper [linear]="true" #stepper>
-    <mat-step [stepControl]="step1">
-      <form [formGroup]="step1" (ngSubmit)="submitStep1()">
-        <ng-template matStepLabel>Step 1</ng-template>
-        <mat-form-field appearance="fill">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" required>
-        </mat-form-field>
-        <div class="stepper-buttons">
-          <button mat-raised-button color="primary" matStepperNext>Next</button>
-        </div>
-      </form>
-    </mat-step>
-    <mat-step [stepControl]="step2">
-      <form [formGroup]="step2" (ngSubmit)="submitStep2()">
-        <ng-template matStepLabel>Step 2</ng-template>
-        <mat-form-field appearance="fill">
-          <mat-label>User</mat-label>
-          <input matInput formControlName="user" required>
-        </mat-form-field>
-        <div class="stepper-buttons">
-          <button mat-raised-button color="accent" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" matStepperNext>Next</button>
-        </div>
-      </form>
-    </mat-step>
-    <mat-step [stepControl]="step3">
-      <form [formGroup]="step3" (ngSubmit)="submitStep3()">
-        <ng-template matStepLabel>Step 3</ng-template>
-        <mat-form-field appearance="fill">
-          <mat-label>Version</mat-label>
-          <input matInput formControlName="version" required>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>State</mat-label>
-          <input matInput formControlName="state" required>
-        </mat-form-field>
-        <div class="stepper-buttons">
-          <button mat-raised-button color="accent" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" (click)="submit()">Submit</button>
-        </div>
-      </form>
-    </mat-step>
+    <div *ngFor="let step of steps; let i = index">
+      <mat-step [stepControl]="step">
+        <form [formGroup]="step">
+          <ng-template matStepLabel>Step {{i + 1}}</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>User</mat-label>
+            <input matInput formControlName="user" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Version</mat-label>
+            <input matInput formControlName="version" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>State</mat-label>
+            <input matInput formControlName="state" required>
+          </mat-form-field>
+          <div class="stepper-buttons">
+            <button mat-raised-button color="accent" matStepperPrevious>Back</button>
+            <button mat-raised-button color="primary" matStepperNext *ngIf="i < steps.length - 1">Next</button>
+            <button mat-raised-button color="primary" (click)="submit()" *ngIf="i === steps.length - 1">Submit</button>
+            <button mat-raised-button color="warn" (click)="removeStep(i)" *ngIf="steps.length > 1">Remove Step</button>
+          </div>
+        </form>
+      </mat-step>
+    </div>
   </mat-horizontal-stepper>
+  <button mat-raised-button color="primary" (click)="addStep()">Insert Step</button>
   <button mat-button color="warn" class="cancel-button" (click)="onCancel()">Cancel</button>
 </mat-card>

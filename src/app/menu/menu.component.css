@@ -13,6 +13,10 @@ html, body, mat-sidenav-container, mat-sidenav, .example-sidenav-content {
 .example-sidenav {
   width: 280px;
   user-select: none;
+  background-color: #cdd6da;
+  color: #08213a;
+  border-radius: 0;
+
 }
 
 .example-sidenav-content {
@@ -58,9 +62,6 @@ html, body, mat-sidenav-container, mat-sidenav, .example-sidenav-content {
 .submenu.expanded {
   transform: scaleY(1);
 }
-
-
-
 table {
   width: 100%;
 }
@@ -71,3 +72,15 @@ table {
 .menu-button.rotated {
   transform: rotate(180deg);
 }
+.example-sidenav .mat-nav-list .mat-list-item mat-icon {
+  margin-right: 20px; /* İkon ve metin arasına boşluk ekler */
+}
+.mat-nav-list .mat-list-item {
+  color: inherit; /* İç metin renginin sidenav ile uyumlu olmasını sağlar */
+  display: flex;
+  align-items: center; /* İkon ve metni aynı hizaya getirir */
+}
+
+
+
+

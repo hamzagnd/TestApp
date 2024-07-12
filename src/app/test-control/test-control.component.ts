@@ -54,6 +54,9 @@ export class TestControlComponent implements OnInit {
     this.expandedElement = this.expandedElement === test ? null : test;
     this.openDialog();
   }
+  runTest(test: Test) {
+    console.log("run butonuna basıldı");
+  }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ScenarioStepperComponent, {
@@ -87,4 +90,5 @@ export class TestControlComponent implements OnInit {
       }
     );
   }
+
 }

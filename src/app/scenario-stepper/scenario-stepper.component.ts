@@ -11,60 +11,48 @@ export class ScenarioStepperComponent implements OnInit {
   @Input() scenario: any;
   @Output() scenarioUpdated = new EventEmitter<any>();
 
-  step1: FormGroup;
-  step2: FormGroup;
-  step3: FormGroup;
+  steps: FormGroup[] = [];
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<ScenarioStepperComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.step1 = this.fb.group({
-      name: ['', Validators.required]
-    });
-    this.step2 = this.fb.group({
-      user: ['', Validators.required]
-    });
-    this.step3 = this.fb.group({
-      version: ['', Validators.required],
-      state: ['', Validators.required]
-    });
-
     if (data) {
       this.scenario = data.scenario;
     }
   }
 
   ngOnInit(): void {
+    this.addStep();
     if (this.scenario) {
-      this.step1.patchValue({ name: this.scenario.name });
-      this.step2.patchValue({ user: this.scenario.user });
-      this.step3.patchValue({
+      this.steps[0].patchValue({
+        name: this.scenario.name,
+        user: this.scenario.user,
         version: this.scenario.version,
         state: this.scenario.state
       });
     }
   }
 
-  submitStep1(): void {
-    console.log('Step 1 submitted');
+  addStep(): void {
+    const step = this.fb.group({
+      name: ['', Validators.required],
+      user: ['', Validators.required],
+      version: ['', Validators.required],
+      state: ['', Validators.required]
+    });
+    this.steps.push(step);
   }
 
-  submitStep2(): void {
-    console.log('Step 2 submitted');
-  }
-
-  submitStep3(): void {
-    console.log('Step 3 submitted');
+  removeStep(index: number): void {
+    this.steps.splice(index, 1);
   }
 
   submit(): void {
     const updatedScenario = {
       ...this.scenario,
-      ...this.step1.value,
-      ...this.step2.value,
-      ...this.step3.value
+      steps: this.steps.map(step => step.value)
     };
     this.scenarioUpdated.emit(updatedScenario);
     this.dialogRef.close(updatedScenario);
@@ -74,3 +62,4 @@ export class ScenarioStepperComponent implements OnInit {
     this.dialogRef.close();
   }
 }
+

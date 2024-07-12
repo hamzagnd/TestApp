@@ -28,6 +28,12 @@ export class MenuComponent {
       this.isShowing = false;
     }
   }
+  toggleSidenav() {
+    this.isExpanded = !this.isExpanded;
+    if (this.isExpanded) {
+      this.isShowing = false;
+    }
+  }
 
   logout(): void {
     this.authService.logout();
