@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { MatDialog } from '@angular/material/dialog';
-import { UserAddComponent } from '../user-add/user-add.component';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -15,7 +15,7 @@ export class MenuComponent {
   isShowing = false;
   showSubSubMenu: boolean = false;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   mouseenter() {
     if (!this.isExpanded) {
@@ -29,13 +29,8 @@ export class MenuComponent {
     }
   }
 
-  openUserAddDialog(): void {
-    const dialogRef = this.dialog.open(UserAddComponent, {
-      width: '600px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { ScenarioService } from './scenario.service';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +12,20 @@ export class AppComponent implements OnInit {
   title = 'Angular TestApp';
   scenarios: any[] = [];
   showAddUserForm = false;
+  currentRoute: string;
 
-  constructor(private scenarioService: ScenarioService) { }
+  constructor(private scenarioService: ScenarioService, private authService: AuthService, private router: Router) { 
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute = event.url;
+      }
+    });
+  }
 
   ngOnInit(): void {
+    if (this.authService.isLoggedIn() && this.currentRoute === '/login') {
+      this.router.navigate(['/menu']);
+    }
     this.getScenarios();
   }
 
@@ -38,5 +50,13 @@ export class AppComponent implements OnInit {
         console.error('Error adding scenario', error);
       }
     );
+  }
+
+  isLoginPage(): boolean {
+    return this.currentRoute === '/login';
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 }

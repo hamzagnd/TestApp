@@ -13,32 +13,32 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TestControlComponent } from './test-control/test-control.component';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
-
-import { MatDialogModule } from '@angular/material/dialog'; 
-import { AppRoutingModule } from './app-routing.module';  
+import { MatDialogModule } from '@angular/material/dialog';
+import { AppRoutingModule } from './app-routing.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MenuComponent } from './menu/menu.component';
-import {MatSidenavContainer} from "@angular/material/sidenav";
-import {MatSidenav} from "@angular/material/sidenav";
-import {MatListItem, MatNavList} from "@angular/material/list";
-import {MatToolbar} from "@angular/material/toolbar";
-import {MatIcon} from "@angular/material/icon";
-import {MatSidenavModule} from '@angular/material/sidenav';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-
-import { MatMenuModule } from'@angular/material/menu';
-import { MatIconModule } from'@angular/material/icon';
-import {RouterModule} from "@angular/router";
+import { MatSidenavContainer } from '@angular/material/sidenav';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatListItem, MatNavList } from '@angular/material/list';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatIcon } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { ReportTableComponent } from './report-table/report-table.component';
-
+import { UsersComponent } from './users/users.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-
-
+import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './auth.guard'; // Add AuthGuard
 
 @NgModule({
   declarations: [
@@ -49,7 +49,9 @@ import { MatDividerModule } from '@angular/material/divider';
     UserAddComponent,
     MenuComponent,
     ReportTableComponent,
-
+    UsersComponent,
+    UserPermissionsComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,6 @@ import { MatDividerModule } from '@angular/material/divider';
     MatExpansionModule,
     HttpClientModule,
     MatDialogModule,
-
     MatSidenavContainer,
     MatSidenav,
     MatNavList,
@@ -77,18 +78,16 @@ import { MatDividerModule } from '@angular/material/divider';
     MatIcon,
     MatCardModule,
     AppRoutingModule,
-
-
     RouterModule,
     MatIconModule,
     MatMenuModule,
-
     NgxChartsModule,
-
     MatDividerModule,
+    MatCheckboxModule,
+    MatRadioModule,
   ],
   providers: [
-    provideAnimationsAsync(),
+    AuthGuard, // Register AuthGuard
   ],
   bootstrap: [AppComponent]
 })
