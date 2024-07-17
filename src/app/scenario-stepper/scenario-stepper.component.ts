@@ -1,6 +1,8 @@
+// /home/harun/TestApp/src/app/scenario-stepper/scenario-stepper.component.ts
 import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ScenarioService } from '../scenario.service';
 
 @Component({
   selector: 'app-scenario-stepper',
@@ -12,11 +14,13 @@ export class ScenarioStepperComponent implements OnInit {
   @Output() scenarioUpdated = new EventEmitter<any>();
 
   steps: FormGroup[] = [];
+  existingSteps: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<ScenarioStepperComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private scenarioService: ScenarioService
   ) {
     if (data) {
       this.scenario = data.scenario;
@@ -24,23 +28,23 @@ export class ScenarioStepperComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.addStep();
     if (this.scenario) {
-      this.steps[0].patchValue({
-        name: this.scenario.name,
-        user: this.scenario.user,
-        version: this.scenario.version,
-        state: this.scenario.state
-      });
+      this.loadSteps();
+      this.addStep();
     }
   }
 
-  addStep(): void {
+  loadSteps(): void {
+    this.scenarioService.getSteps(this.scenario.id).subscribe(steps => {
+      this.existingSteps = steps;
+      steps.forEach(step => this.addStep(step));
+    });
+  }
+
+  addStep(stepData: any = null): void {
     const step = this.fb.group({
-      name: ['', Validators.required],
-      user: ['', Validators.required],
-      version: ['', Validators.required],
-      state: ['', Validators.required]
+      category: [stepData ? stepData.category : '', Validators.required],
+      success_criteria: [stepData ? stepData.success_criteria : '', Validators.required]
     });
     this.steps.push(step);
   }
@@ -54,12 +58,13 @@ export class ScenarioStepperComponent implements OnInit {
       ...this.scenario,
       steps: this.steps.map(step => step.value)
     };
-    this.scenarioUpdated.emit(updatedScenario);
-    this.dialogRef.close(updatedScenario);
+    this.scenarioService.updateScenario(updatedScenario).subscribe(() => {
+      this.scenarioUpdated.emit(updatedScenario);
+      this.dialogRef.close(updatedScenario);
+    });
   }
 
   onCancel(): void {
     this.dialogRef.close();
   }
 }
-

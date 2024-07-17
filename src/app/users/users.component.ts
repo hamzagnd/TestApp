@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserAddComponent } from '../user-add/user-add.component';
 import { UserService } from '../user.service';
 import { UserPermissionsComponent } from '../user-permissions/user-permissions.component';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-users',
@@ -14,7 +15,7 @@ export class UsersComponent implements OnInit {
   displayedColumns: string[] = ['username', 'email', 'first_name', 'last_name', 'permissions', 'actions'];
   dataSource: MatTableDataSource<any>;
 
-  constructor(private dialog: MatDialog, private userService: UserService) { }
+  constructor(private dialog: MatDialog, private userService: UserService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -48,10 +49,17 @@ export class UsersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.userService.updateUserPermissions(result).subscribe(() => {
-          this.loadUsers(); // Reload users after updating permissions
-        });
+        const index = this.dataSource.data.findIndex(u => u.id === result.id);
+        if (index !== -1) {
+          this.dataSource.data[index] = result;
+          this.dataSource._updateChangeSubscription();
+        }
       }
     });
+  }
+
+  canEditPermissions(user: any): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    return currentUser.permissions.canEditUser && currentUser.permissions.level > user.permissions.level;
   }
 }

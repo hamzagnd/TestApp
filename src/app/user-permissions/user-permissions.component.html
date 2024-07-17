@@ -1,20 +1,34 @@
-<h2 mat-dialog-title>Update User Permissions</h2>
+<h2 mat-dialog-title>User Permissions for {{ user.username }}</h2>
 <mat-dialog-content>
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Username</mat-label>
-    <input matInput [(ngModel)]="user.username" disabled>
+    <input matInput [value]="user.username" disabled>
   </mat-form-field>
   <div class="permissions-container">
     <div class="permission-item">
-      <span>Edit Permission:</span>
-      <mat-radio-group [(ngModel)]="user.can_edit">
+      <span>Can Edit User:</span>
+      <mat-radio-group [(ngModel)]="permissionsForm.controls.canEditUser.value">
         <mat-radio-button [value]="true">Yes</mat-radio-button>
         <mat-radio-button [value]="false">No</mat-radio-button>
       </mat-radio-group>
     </div>
     <div class="permission-item">
-      <span>Delete Permission:</span>
-      <mat-radio-group [(ngModel)]="user.can_delete">
+      <span>Can Delete User:</span>
+      <mat-radio-group [(ngModel)]="permissionsForm.controls.canDeleteUser.value">
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="permission-item">
+      <span>Can Edit Scenario:</span>
+      <mat-radio-group [(ngModel)]="permissionsForm.controls.canEditScenario.value">
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="permission-item">
+      <span>Can Delete Scenario:</span>
+      <mat-radio-group [(ngModel)]="permissionsForm.controls.canDeleteScenario.value">
         <mat-radio-button [value]="true">Yes</mat-radio-button>
         <mat-radio-button [value]="false">No</mat-radio-button>
       </mat-radio-group>

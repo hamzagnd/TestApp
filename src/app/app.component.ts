@@ -18,26 +18,35 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.currentRoute = event.url;
+        this.handleLoginRedirect();
       }
     });
   }
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn() && this.currentRoute === '/login') {
-      this.router.navigate(['/menu']);
-    }
+    this.handleLoginRedirect();
     this.getScenarios();
   }
 
+  handleLoginRedirect(): void {
+    if (this.authService.isLoggedIn() && this.currentRoute === '/login') {
+      this.router.navigate(['/menu']);
+    } else if (!this.authService.isLoggedIn() && this.currentRoute !== '/login') {
+      this.router.navigate(['/login']);
+    }
+  }
+
   getScenarios(): void {
-    this.scenarioService.getScenarios().subscribe(
-      data => {
-        this.scenarios = data;
-      },
-      error => {
-        console.error('Error fetching scenarios', error);
-      }
-    );
+    if (this.authService.isLoggedIn()) {
+      this.scenarioService.getScenarios().subscribe(
+        data => {
+          this.scenarios = data;
+        },
+        error => {
+          console.error('Error fetching scenarios', error);
+        }
+      );
+    }
   }
 
   addScenario(): void {

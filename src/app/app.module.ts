@@ -69,7 +69,7 @@ import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
     MatTableModule,
     MatInputModule,
     MatButtonModule,
-    MatFormFieldModule,>>>>>>> master
+    MatFormFieldModule,
     MatPaginatorModule,
     MatSidenavModule,
     MatSortModule,
@@ -98,10 +98,9 @@ import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
     MatRadioModule,
   ],
 
-  providers: [ AuthGuard, // Register AuthGuard ],
+  providers: [ AuthGuard],
 
   bootstrap: [AppComponent],
-  //entryComponents: [EditDialogComponent]
 
 })
 export class AppModule { }
