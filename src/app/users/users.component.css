@@ -63,7 +63,6 @@ button[mat-raised-button]:hover {
   background-color: #f1f1f1;
 }
 
-.mat-icon {
-  vertical-align: middle;
-  margin-right: 5px;
+.permission-item {
+  display: inline-flex
 }

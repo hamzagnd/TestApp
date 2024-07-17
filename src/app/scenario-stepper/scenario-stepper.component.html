@@ -1,4 +1,4 @@
-<!-- scenario-stepper.component.html -->
+<!-- /home/harun/TestApp/src/app/scenario-stepper/scenario-stepper.component.html -->
 <mat-card class="stepper-card">
   <mat-horizontal-stepper [linear]="true" #stepper>
     <div *ngFor="let step of steps; let i = index">
@@ -6,20 +6,12 @@
         <form [formGroup]="step">
           <ng-template matStepLabel>Step {{i + 1}}</ng-template>
           <mat-form-field appearance="fill">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="name" required>
+            <mat-label>Category</mat-label>
+            <input matInput formControlName="category" required>
           </mat-form-field>
           <mat-form-field appearance="fill">
-            <mat-label>User</mat-label>
-            <input matInput formControlName="user" required>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Version</mat-label>
-            <input matInput formControlName="version" required>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>State</mat-label>
-            <input matInput formControlName="state" required>
+            <mat-label>Success Criteria</mat-label>
+            <input matInput formControlName="success_criteria" required>
           </mat-form-field>
           <div class="stepper-buttons">
             <button mat-raised-button color="accent" matStepperPrevious>Back</button>

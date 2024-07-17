@@ -21,4 +21,8 @@ export class UserService {
   addUser(user: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/users/`, user);
   }
+
+  getUserPermissions(userId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/users/${userId}/permissions/`);
+  }
 }

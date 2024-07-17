@@ -34,12 +34,18 @@
         <ng-container matColumnDef="permissions">
           <th mat-header-cell *matHeaderCellDef> Permissions </th>
           <td mat-cell *matCellDef="let user">
-            <mat-icon *ngIf="user.can_edit" color="primary">check_circle</mat-icon>
-            <mat-icon *ngIf="!user.can_edit" color="warn">cancel</mat-icon>
-            Edit,
-            <mat-icon *ngIf="user.can_delete" color="primary">check_circle</mat-icon>
-            <mat-icon *ngIf="!user.can_delete" color="warn">cancel</mat-icon>
-            Delete
+            <mat-icon *ngIf="user.can_edit_user" color="primary">check_circle</mat-icon>
+            <mat-icon *ngIf="!user.can_edit_user" color="warn">cancel</mat-icon>
+            Edit User,
+            <mat-icon *ngIf="user.can_delete_user" color="primary">check_circle</mat-icon>
+            <mat-icon *ngIf="!user.can_delete_user" color="warn">cancel</mat-icon>
+            Delete User,
+            <mat-icon *ngIf="user.can_edit_scenario" color="primary">check_circle</mat-icon>
+            <mat-icon *ngIf="!user.can_edit_scenario" color="warn">cancel</mat-icon>
+            Edit Scenario,
+            <mat-icon *ngIf="user.can_delete_scenario" color="primary">check_circle</mat-icon>
+            <mat-icon *ngIf="!user.can_delete_scenario" color="warn">cancel</mat-icon>
+            Delete Scenario
           </td>
         </ng-container>
 

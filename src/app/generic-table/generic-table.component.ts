@@ -32,7 +32,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   constructor(private scenarioService: ScenarioService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.fetchScenarios();
+    //this.fetchScenarios();
   }
 
   ngAfterViewInit(): void {
