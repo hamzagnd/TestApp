@@ -64,5 +64,11 @@ button[mat-raised-button]:hover {
 }
 
 .permission-item {
-  display: inline-flex
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.permission-item mat-icon {
+  margin-right: 4px;
 }

@@ -16,6 +16,7 @@ import { TestControlComponent } from './test-control/test-control.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';  
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppRoutingModule } from './app-routing.module';
@@ -40,9 +41,11 @@ import { UserPermissionsComponent } from './user-permissions/user-permissions.co
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './auth.guard'; // Add AuthGuard
+import { AuthGuard } from './auth.guard'; 
 
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+
 
 
 
@@ -61,6 +64,8 @@ import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
     UserPermissionsComponent,
     LoginComponent,
     EditDialogComponent,
+    ConfirmDialogComponent,
+    
 
   ],
   imports: [
@@ -96,6 +101,8 @@ import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
     MatDividerModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatSnackBarModule,  
+
   ],
 
   providers: [ AuthGuard],

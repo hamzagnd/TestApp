@@ -1,4 +1,3 @@
-// /home/harun/TestApp/src/app/scenario.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ScenarioService {
-  private apiUrl = 'http://127.0.0.1:8000/api/scenarios/'; // Django API URL'sini buraya yazın
+  private apiUrl = 'http://127.0.0.1:8000/api/scenarios/'; // Django API URL
 
   constructor(private http: HttpClient) { }
 
@@ -29,10 +28,14 @@ export class ScenarioService {
   }
 
   addStep(scenarioId: number, step: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}${scenarioId}/steps/`, step);
+    return this.http.post(`${this.apiUrl}${scenarioId}/steps/`, { ...step, scenario: scenarioId });
   }
 
   updateStep(scenarioId: number, step: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}${scenarioId}/steps/${step.id}/`, step);
+    return this.http.put(`${this.apiUrl}${scenarioId}/steps/${step.id}/`, { ...step, scenario: scenarioId });
+  }
+
+  deleteStep(scenarioId: number, stepId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${scenarioId}/steps/${stepId}/`);
   }
 }
