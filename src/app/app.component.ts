@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog'; // MatDialog'u ekleyin
 import { ScenarioService } from './scenario.service';
 import { AuthService } from './auth.service';
+import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component'; // ScenarioStepperComponent'i ekleyin
 
 @Component({
   selector: 'app-root',
@@ -15,7 +17,12 @@ export class AppComponent implements OnInit {
   currentRoute: string;
   currentUser: any;
 
-  constructor(private scenarioService: ScenarioService, private authService: AuthService, private router: Router) { 
+  constructor(
+    private scenarioService: ScenarioService,
+    private authService: AuthService,
+    private router: Router,
+    public dialog: MatDialog // MatDialog'u inject edin
+  ) { 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.currentRoute = event.url;
@@ -25,6 +32,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.loadAuthState();  // Ensure auth state is loaded on init
     this.handleLoginRedirect();
     this.getScenarios();
     this.currentUser = this.authService.getCurrentUser();
@@ -32,7 +40,7 @@ export class AppComponent implements OnInit {
 
   handleLoginRedirect(): void {
     if (this.authService.isLoggedIn() && this.currentRoute === '/login') {
-      this.router.navigate(['/']);  // Redirect to home page
+      this.router.navigate(['/test']);  // Redirect to test page
     } else if (!this.authService.isLoggedIn() && this.currentRoute !== '/login') {
       this.router.navigate(['/login']);
     }
@@ -61,6 +69,18 @@ export class AppComponent implements OnInit {
         console.error('Error adding scenario', error);
       }
     );
+  }
+
+  openScenarioStepper(scenario: any): void {
+    const dialogRef = this.dialog.open(ScenarioStepperComponent, {
+      width: '90vw', 
+      data: { scenario }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // Handle the result if necessary
+    });
   }
 
   isLoginPage(): boolean {

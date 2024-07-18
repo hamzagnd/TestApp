@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
@@ -15,9 +15,14 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadAuthState();
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.loadAuthState();  // Ensure auth state is loaded on every navigation end
+      }
+    });
   }
 
-  private loadAuthState(): void {
+  public loadAuthState(): void {  
     if (this.isBrowser()) {
       this.loggedIn = localStorage.getItem('loggedIn') === 'true';
       this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -39,7 +44,7 @@ export class AuthService {
             localStorage.setItem('currentUser', JSON.stringify(response.user));
             localStorage.setItem('userPermissions', JSON.stringify(response.permissions));
           }
-          this.router.navigate(['/test']);  // Navigate to test page
+          this.router.navigate(['/test']);  // Redirect to test page after login
         }
       }),
       catchError(this.handleError<any>('login', null))

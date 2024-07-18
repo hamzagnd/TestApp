@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ScenarioService } from '../scenario.service';
 import { TableData } from '../models/table-data.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ScenarioStepperComponent } from '../scenario-stepper/scenario-stepper.component';
+import { Subscription } from 'rxjs';
 
 interface Test {
   id: number;
@@ -19,12 +20,13 @@ interface Test {
   templateUrl: './test-control.component.html',
   styleUrls: ['./test-control.component.css']
 })
-export class TestControlComponent implements OnInit {
+export class TestControlComponent implements OnInit, OnDestroy {
   columns = ['name', 'user', 'version', 'state'];
   data: TableData<Test>[] = [];
   dataSource: MatTableDataSource<TableData<Test>> = new MatTableDataSource<TableData<Test>>();
   selectedTest: Test | null = null;
   expandedElement: Test | null = null;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(private scenarioService: ScenarioService, public dialog: MatDialog) { }
 
@@ -32,8 +34,12 @@ export class TestControlComponent implements OnInit {
     this.getScenarios();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
   getScenarios(): void {
-    this.scenarioService.getScenarios().subscribe(
+    const sub = this.scenarioService.getScenarios().subscribe(
       data => {
         this.data = data.map(item => new TableData<Test>(item));
         this.dataSource.data = this.data;
@@ -42,6 +48,7 @@ export class TestControlComponent implements OnInit {
         console.error('Error fetching scenarios', error);
       }
     );
+    this.subscriptions.add(sub);
   }
 
   onNameClick(test: Test): void {
@@ -54,7 +61,8 @@ export class TestControlComponent implements OnInit {
     this.expandedElement = this.expandedElement === test ? null : test;
     this.openDialog();
   }
-  runTest(test: Test) {
+
+  runTest(test: Test): void {
     console.log("run butonuna basıldı");
   }
 
@@ -64,11 +72,12 @@ export class TestControlComponent implements OnInit {
       data: { scenario: this.selectedTest }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    const sub = dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.updateScenario(result);
       }
     });
+    this.subscriptions.add(sub);
   }
 
   closeStepper(): void {
@@ -76,7 +85,7 @@ export class TestControlComponent implements OnInit {
   }
 
   updateScenario(updatedScenario: Test): void {
-    this.scenarioService.updateScenario(updatedScenario).subscribe(
+    const sub = this.scenarioService.updateScenario(updatedScenario).subscribe(
       response => {
         const index = this.data.findIndex(item => item.data.id === updatedScenario.id);
         if (index !== -1) {
@@ -89,6 +98,6 @@ export class TestControlComponent implements OnInit {
         console.error('Error updating scenario', error);
       }
     );
+    this.subscriptions.add(sub);
   }
-
 }

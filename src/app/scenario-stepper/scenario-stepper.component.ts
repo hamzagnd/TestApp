@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ScenarioService } from '../scenario.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,7 +18,13 @@ export class ScenarioStepperComponent implements OnInit {
   steps: any[] = [];
   stepForm: FormGroup;
   selectedStepIndex: number | null = null;
-  maxSteps = 10;  // Maximum number of steps
+
+  // Paginator settings
+  pageSize = 5;
+  pageIndex = 0;
+  paginatedSteps: any[] = [];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private fb: FormBuilder,
@@ -46,17 +53,23 @@ export class ScenarioStepperComponent implements OnInit {
   loadSteps(): void {
     this.scenarioService.getSteps(this.scenario.id).subscribe(steps => {
       this.steps = steps;
+      this.updatePaginatedSteps();
     });
   }
 
-  addStep(): void {
-    if (this.steps.length >= this.maxSteps) {
-      this.snackBar.open('You have reached the maximum number of steps', 'Close', {
-        duration: 3000,
-      });
-      return;
-    }
+  updatePaginatedSteps(): void {
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedSteps = this.steps.slice(startIndex, endIndex);
+  }
 
+  handlePageEvent(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedSteps();
+  }
+
+  addStep(): void {
     if (this.stepForm.valid) {
       const newStep = this.stepForm.value;
       if (this.selectedStepIndex !== null) {
@@ -80,17 +93,19 @@ export class ScenarioStepperComponent implements OnInit {
 
   editStep(index: number): void {
     this.selectedStepIndex = index;
-    this.stepForm.patchValue(this.steps[index]);
+    const absoluteIndex = this.pageIndex * this.pageSize + index;
+    this.stepForm.patchValue(this.steps[absoluteIndex]);
   }
 
   deleteStep(index: number): void {
+    const absoluteIndex = this.pageIndex * this.pageSize + index;
     const dialogRef = this.dialog.open(ConfirmDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const stepId = this.steps[index].id;
+        const stepId = this.steps[absoluteIndex].id;
         this.scenarioService.deleteStep(this.scenario.id, stepId).subscribe(() => {
-          this.steps.splice(index, 1);
+          this.steps.splice(absoluteIndex, 1);
           this.loadSteps(); // Refresh the page
         });
       }

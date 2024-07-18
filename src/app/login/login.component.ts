@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
         response => {
           console.log('Login response:', response);  // Debugging line
           if (response && response.message === 'Login successful') {
-            this.router.navigate(['/test']);  // Navigate after successful login
+            this.router.navigate(['/test']);  // Navigate to test page after successful login
           } else {
             console.error('Login failed');
           }
