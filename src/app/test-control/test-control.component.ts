@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ScenarioService } from '../scenario.service';
 import { TableData } from '../models/table-data.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ScenarioStepperComponent } from '../scenario-stepper/scenario-stepper.component';
+import { ColumnDefinition, ColumnType } from '../column';
+import { Router } from '@angular/router';
 
 interface Test {
   id: number;
@@ -19,17 +21,32 @@ interface Test {
   templateUrl: './test-control.component.html',
   styleUrls: ['./test-control.component.css']
 })
-export class TestControlComponent implements OnInit {
-  columns = ['name', 'user', 'version', 'state'];
+export class TestControlComponent implements OnInit, OnChanges {
+  columns: ColumnDefinition[] = [
+    new ColumnDefinition('name', 'Name', ColumnType.STRING),
+    new ColumnDefinition('user', 'User', ColumnType.STRING),
+    new ColumnDefinition('version', 'Version', ColumnType.STRING),
+    new ColumnDefinition('state', 'State', ColumnType.ENUM),
+    new ColumnDefinition('run', 'Run', ColumnType.CUSTOM)
+  ];
   data: TableData<Test>[] = [];
   dataSource: MatTableDataSource<TableData<Test>> = new MatTableDataSource<TableData<Test>>();
   selectedTest: Test | null = null;
   expandedElement: Test | null = null;
 
-  constructor(private scenarioService: ScenarioService, public dialog: MatDialog) { }
+  displayedColumnKeys: string[] = [];
+
+  constructor(private scenarioService: ScenarioService, private router: Router, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.getScenarios();
+    this.displayedColumnKeys = this.columns.map(c => c.key).concat('run');
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['columns']) {
+      this.displayedColumnKeys = this.columns.map(c => c.key).concat('run');
+    }
   }
 
   getScenarios(): void {
@@ -51,11 +68,12 @@ export class TestControlComponent implements OnInit {
 
   onRowClick(test: Test): void {
     this.selectedTest = test;
-    this.expandedElement = this.expandedElement === test ? null : test;
     this.openDialog();
   }
+
   runTest(test: Test) {
     console.log("run butonuna basıldı");
+    this.router.navigate(['/report']);
   }
 
   openDialog(): void {
@@ -90,5 +108,4 @@ export class TestControlComponent implements OnInit {
       }
     );
   }
-
 }

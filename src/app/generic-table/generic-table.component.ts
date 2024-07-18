@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -6,18 +6,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { TableData } from '../models/table-data.model';
 import { ScenarioService } from '../scenario.service';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
+import { ColumnDefinition, ColumnType } from '../column';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import {Test} from "../test-control/test";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-generic-table',
   templateUrl: './generic-table.component.html',
   styleUrls: ['./generic-table.component.css']
 })
-export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit {
-  @Input() displayedColumns: string[] = [];
+export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit, OnChanges {
+  @Input() columns: ColumnDefinition[] = [];
   @Input() dataSource: MatTableDataSource<TableData<T>> = new MatTableDataSource<TableData<T>>([]);
-
 
   newData: Partial<T> = {};
   @Output() rowClick = new EventEmitter<T>();
@@ -28,8 +30,9 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   length = 0;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 20];
+  displayedColumnKeys: string[] = [];
 
-  constructor(private scenarioService: ScenarioService, public dialog: MatDialog) {}
+  constructor(private scenarioService: ScenarioService,private router: Router, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     //this.fetchScenarios();
@@ -44,11 +47,17 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['columns']) {
+      this.displayedColumnKeys = this.columns.map(c => c.key).concat('edit');
+    }
+  }
+
   fetchScenarios(): void {
     this.scenarioService.getScenarios().subscribe(
       scenarios => {
         this.dataSource.data = scenarios.map(scenario => new TableData(scenario));
-        this.length = this.dataSource.data.length; // Gelen veri uzunluğuna göre paginator'u ayarlayın
+        this.length = this.dataSource.data.length;
       },
       error => {
         console.error('Error fetching scenarios', error);
@@ -68,7 +77,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
         this.dataSource.data.push(new TableData(dataCopy));
         this.dataSource.data = [...this.dataSource.data];
         this.newData = {};
-        this.length = this.dataSource.data.length; // Güncellenen veri uzunluğunu belirleyin
+        this.length = this.dataSource.data.length;
       },
       error => {
         console.error('Error adding scenario', error);
@@ -78,11 +87,11 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
 
   exportToPDF() {
     const doc = new jsPDF();
-    const columns = this.displayedColumns.map(column => ({ title: column, dataKey: column }));
+    const columns = this.columns.map(column => ({ title: column.header, dataKey: column.key }));
     const rows = this.dataSource.data.map((row: TableData<T>) => {
       const rowData: { [key: string]: any } = {};
-      this.displayedColumns.forEach(column => {
-        rowData[column] = row.data[column];
+      this.columns.forEach(column => {
+        rowData[column.key] = row.data[column.key];
       });
       return rowData;
     });
@@ -98,7 +107,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   editRow(row: TableData<T>) {
     const dialogRef = this.dialog.open(EditDialogComponent, {
       width: '250px',
-      data: { row: { ...row.data }, displayedColumns: this.displayedColumns }
+      data: { row: { ...row.data }, displayedColumns: this.columns.map(c => c.key) }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -108,8 +117,12 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
       }
     });
   }
+  runTest(test: Test) {
+    console.log("run butonuna basıldı");
+    this.router.navigate(['/report']);
+  }
+
   runRow(element: TableData<T>) {
-    // Run işlemlerini buraya ekleyin
     console.log('Run Row:', element);
   }
 
@@ -124,4 +137,5 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
       return '';
     }
   }
+
 }
