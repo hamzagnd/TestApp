@@ -1,7 +1,7 @@
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
   <mat-tab label="Tablo">
     <div class="table-container">
-      <app-generic-table [displayedColumns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)"></app-generic-table>
+      <app-generic-table [columns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)"></app-generic-table>
     </div>
   </mat-tab>
   <mat-tab label="Chart">
