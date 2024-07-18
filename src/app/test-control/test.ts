@@ -1,8 +1,8 @@
-interface Test {
-  id: number;
+export interface Test {
+
   name: string;
-  user: string;
-  version: string;
+  owner: string;
+  time: string;
   state: string;
-  subItems?: Test[];
+
 }

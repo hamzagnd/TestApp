@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { TableData } from '../models/table-data.model';
 import { MatTableDataSource } from '@angular/material/table';
-
-interface Test {
-  name: string;
-  owner: string;
-  time: string;
-  state: string;
-}
+import { ColumnDefinition } from '../column';
+import { Test } from '../test-control/test';
+import { ReportService } from '../report.service';
 
 @Component({
   selector: 'app-report-table',
@@ -16,19 +12,23 @@ interface Test {
 })
 export class ReportTableComponent implements OnInit {
 
-  columns = ['name', 'owner', 'time', 'state'];
-  data: TableData<Test>[] = [
-    new TableData({ name: 'deneme1', owner: 'admin', time: '20-11-2023', state: 'geçti' }),
-    new TableData({ name: 'deneme2', owner: 'admin', time: '20-11-2023', state: 'kaldı' }),
-    new TableData({ name: 'deneme3', owner: 'admin', time: '20-11-2023', state: 'Test Edilmedi' }),
+  columns: ColumnDefinition[] = [
+    new ColumnDefinition('name', 'Name'),
+    new ColumnDefinition('owner', 'Owner'),
+    new ColumnDefinition('time', 'Time'),
+    new ColumnDefinition('state', 'State')
   ];
+
+  data: TableData<Test>[] = [];
   dataSource: MatTableDataSource<TableData<Test>>;
 
-  // Donut Chart Variables
   public donutChartData: any[] = [];
   public donutChartLabels: string[] = ['Geçti', 'Kaldı', 'Test Edilmedi'];
 
+  constructor(private reportService: ReportService) {}
+
   ngOnInit(): void {
+    this.data = this.reportService.getData();
     this.dataSource = new MatTableDataSource(this.data);
     this.updateDonutChartData();
   }
@@ -37,9 +37,6 @@ export class ReportTableComponent implements OnInit {
     console.log('Row clicked:', test);
   }
 
-
-
-  // Update Donut Chart Data
   updateDonutChartData() {
     const passed = this.data.filter(item => item.data.state === 'geçti').length;
     const failed = this.data.filter(item => item.data.state === 'kaldı').length;
