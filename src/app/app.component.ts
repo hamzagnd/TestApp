@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   scenarios: any[] = [];
   showAddUserForm = false;
   currentRoute: string;
+  currentUser: any;
 
   constructor(private scenarioService: ScenarioService, private authService: AuthService, private router: Router) { 
     this.router.events.subscribe(event => {
@@ -26,11 +27,12 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.handleLoginRedirect();
     this.getScenarios();
+    this.currentUser = this.authService.getCurrentUser();
   }
 
   handleLoginRedirect(): void {
     if (this.authService.isLoggedIn() && this.currentRoute === '/login') {
-      this.router.navigate(['/menu']);
+      this.router.navigate(['/']);  // Redirect to home page
     } else if (!this.authService.isLoggedIn() && this.currentRoute !== '/login') {
       this.router.navigate(['/login']);
     }

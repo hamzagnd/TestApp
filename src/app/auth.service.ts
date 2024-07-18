@@ -45,7 +45,7 @@ export class AuthService {
       catchError(this.handleError<any>('login', null))
     );
   }
-
+  
   logout(): void {
     this.loggedIn = false;
     this.currentUser = {};

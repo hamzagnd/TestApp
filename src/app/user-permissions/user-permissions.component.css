@@ -1,15 +1,22 @@
+/* CSS dosyanıza ekleyin */
+
 .permissions-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .permission-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.permission-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mat-radio-group {
+  display: flex;
+  gap: 10px;
+}
+
   
   .mat-dialog-actions {
     display: flex;

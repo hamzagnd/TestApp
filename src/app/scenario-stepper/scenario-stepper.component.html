@@ -1,28 +1,70 @@
-<!-- /home/harun/TestApp/src/app/scenario-stepper/scenario-stepper.component.html -->
 <mat-card class="stepper-card">
-  <mat-horizontal-stepper [linear]="true" #stepper>
-    <div *ngFor="let step of steps; let i = index">
-      <mat-step [stepControl]="step">
-        <form [formGroup]="step">
-          <ng-template matStepLabel>Step {{i + 1}}</ng-template>
-          <mat-form-field appearance="fill">
-            <mat-label>Category</mat-label>
-            <input matInput formControlName="category" required>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Success Criteria</mat-label>
-            <input matInput formControlName="success_criteria" required>
-          </mat-form-field>
-          <div class="stepper-buttons">
-            <button mat-raised-button color="accent" matStepperPrevious>Back</button>
-            <button mat-raised-button color="primary" matStepperNext *ngIf="i < steps.length - 1">Next</button>
-            <button mat-raised-button color="primary" (click)="submit()" *ngIf="i === steps.length - 1">Submit</button>
-            <button mat-raised-button color="warn" (click)="removeStep(i)" *ngIf="steps.length > 1">Remove Step</button>
-          </div>
-        </form>
-      </mat-step>
-    </div>
-  </mat-horizontal-stepper>
-  <button mat-raised-button color="primary" (click)="addStep()">Insert Step</button>
-  <button mat-button color="warn" class="cancel-button" (click)="onCancel()">Cancel</button>
+  <h2>{{ scenario.name }}</h2>
+  <h3>Steps</h3>
+  <div class="stepper-table-container">
+    <table mat-table [dataSource]="steps" class="mat-elevation-z8 custom-table">
+      <ng-container matColumnDef="stepNumber">
+        <th mat-header-cell *matHeaderCellDef class="header-cell">Step #</th>
+        <td mat-cell *matCellDef="let step; let i = index">{{ i + 1 }}</td>
+      </ng-container>
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef class="header-cell">Step Procedure</th>
+        <td mat-cell *matCellDef="let step">{{ step.category }}</td>
+      </ng-container>
+      <ng-container matColumnDef="success_criteria">
+        <th mat-header-cell *matHeaderCellDef class="header-cell">Step Criteria</th>
+        <td mat-cell *matCellDef="let step">{{ step.success_criteria }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="header-cell">Actions</th>
+        <td mat-cell *matCellDef="let step; let i = index">
+          <button mat-icon-button (click)="editStep(i)"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button (click)="deleteStep(i)"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['stepNumber', 'category', 'success_criteria', 'actions']" class="sticky-header"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['stepNumber', 'category', 'success_criteria', 'actions'];"></tr>
+    </table>
+  </div>
+
+  <h3>Add/Edit Step</h3>
+  <form [formGroup]="stepForm" class="stepper-form">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Step Procedure</mat-label>
+      <input matInput formControlName="category" required>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Step Criteria</mat-label>
+      <input matInput formControlName="success_criteria" required>
+    </mat-form-field>
+  </form>
+
+  <div class="stepper-buttons">
+    <button mat-raised-button color="primary" (click)="addStep()">Add/Save Step</button>
+    <button mat-button color="warn" (click)="onCancel()">Cancel</button>
+  </div>
 </mat-card>
+
+
+<style>
+  .stepper-table-container {
+    max-height: 200px; /* Scroll bar için yükseklik sınırlaması */
+    overflow-y: auto;
+  }
+  .mat-elevation-z8.custom-table {
+    width: 100%;
+  }
+  .stepper-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .full-width {
+    width: 100%;
+  }
+  .stepper-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+</style>
