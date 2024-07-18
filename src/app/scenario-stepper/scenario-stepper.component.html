@@ -2,10 +2,10 @@
   <h2>{{ scenario.name }}</h2>
   <h3>Steps</h3>
   <div class="stepper-table-container">
-    <table mat-table [dataSource]="steps" class="mat-elevation-z8 custom-table">
+    <table mat-table [dataSource]="paginatedSteps" class="mat-elevation-z8 custom-table">
       <ng-container matColumnDef="stepNumber">
         <th mat-header-cell *matHeaderCellDef class="header-cell">Step #</th>
-        <td mat-cell *matCellDef="let step; let i = index">{{ i + 1 }}</td>
+        <td mat-cell *matCellDef="let step; let i = index">{{ i + 1 + (pageIndex * pageSize) }}</td>
       </ng-container>
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef class="header-cell">Step Procedure</th>
@@ -27,7 +27,7 @@
       <tr mat-row *matRowDef="let row; columns: ['stepNumber', 'category', 'success_criteria', 'actions'];"></tr>
     </table>
   </div>
-
+  <mat-paginator [length]="steps.length" [pageSize]="pageSize" (page)="handlePageEvent($event)" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   <h3>Add/Edit Step</h3>
   <form [formGroup]="stepForm" class="stepper-form">
     <mat-form-field appearance="fill" class="full-width">
@@ -45,26 +45,3 @@
     <button mat-button color="warn" (click)="onCancel()">Cancel</button>
   </div>
 </mat-card>
-
-
-<style>
-  .stepper-table-container {
-    max-height: 200px; /* Scroll bar için yükseklik sınırlaması */
-    overflow-y: auto;
-  }
-  .mat-elevation-z8.custom-table {
-    width: 100%;
-  }
-  .stepper-form {
-    display: flex;
-    flex-direction: column;
-  }
-  .full-width {
-    width: 100%;
-  }
-  .stepper-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-</style>

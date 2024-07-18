@@ -1,6 +1,8 @@
+
 <app-generic-table [columns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)">
 
 
   <tr mat-header-row *matHeaderRowDef="displayedColumnKeys"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumnKeys"></tr>
 </app-generic-table>
+
