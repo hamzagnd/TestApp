@@ -22,20 +22,48 @@ export class AuthService {
     });
   }
 
-  public loadAuthState(): void {  
+  public loadAuthState(): void {
     if (this.isBrowser()) {
-      this.loggedIn = localStorage.getItem('loggedIn') === 'true';
-      this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      this.userPermissions = JSON.parse(localStorage.getItem('userPermissions') || '{}');
+      try {
+        this.loggedIn = localStorage.getItem('loggedIn') === 'true';
+        const currentUser = localStorage.getItem('currentUser');
+        const userPermissions = localStorage.getItem('userPermissions');
+
+        this.currentUser = this.parseJsonSafe(currentUser);
+        this.userPermissions = this.parseJsonSafe(userPermissions);
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+          this.loggedIn = false;
+        }
+        console.log('Loaded permissions:', this.userPermissions);  // Debugging line
+      } catch (error) {
+        console.error('Error parsing JSON from localStorage:', error);
+        this.loggedIn = false;
+        this.currentUser = {};
+        this.userPermissions = {};
+        this.clearAuthState();
+      }
+    }
+  }
+
+  private parseJsonSafe(jsonString: string | null): any {
+    try {
+      if (jsonString === null || jsonString === undefined || jsonString === 'undefined') {
+        return {};
+      }
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error('Error parsing JSON string:', error);
+      return {};
     }
   }
 
   login(userData: any): Observable<any> {
-    console.log('Sending login request:', userData);  // Debugging line
-    return this.http.post<any>(`${this.apiUrl}/login/`, userData).pipe(
+    return this.http.post<any>(`${this.apiUrl}/token/`, userData).pipe(
       tap(response => {
-        console.log('Received login response:', response);  // Debugging line
-        if (response.message === 'Login successful') {
+        console.log('Backend response:', response);  // Debugging line
+        if (response.access) {
           this.loggedIn = true;
           this.currentUser = response.user;
           this.userPermissions = response.permissions;
@@ -43,6 +71,8 @@ export class AuthService {
             localStorage.setItem('loggedIn', 'true');
             localStorage.setItem('currentUser', JSON.stringify(response.user));
             localStorage.setItem('userPermissions', JSON.stringify(response.permissions));
+            localStorage.setItem('token', response.access);
+            console.log('Permissions saved:', this.userPermissions);  // Debugging line
           }
           this.router.navigate(['/test']);  // Redirect to test page after login
         }
@@ -51,15 +81,12 @@ export class AuthService {
     );
   }
   
+
   logout(): void {
     this.loggedIn = false;
     this.currentUser = {};
     this.userPermissions = {};
-    if (this.isBrowser()) {
-      localStorage.removeItem('loggedIn');
-      localStorage.removeItem('currentUser');
-      localStorage.removeItem('userPermissions');
-    }
+    this.clearAuthState();
     this.router.navigate(['/login']);
   }
 
@@ -72,6 +99,7 @@ export class AuthService {
   }
 
   canEditUser(): boolean {
+    console.log('canEditUser permission:', this.userPermissions.canEditUser);  // Debugging line
     return this.userPermissions.canEditUser || false;
   }
 
@@ -89,6 +117,15 @@ export class AuthService {
 
   hasPermission(permission: string): boolean {
     return this.userPermissions[permission] || false;
+  }
+
+  private clearAuthState(): void {
+    if (this.isBrowser()) {
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('userPermissions');
+      localStorage.removeItem('token');
+    }
   }
 
   private isBrowser(): boolean {

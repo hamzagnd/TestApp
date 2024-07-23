@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserService } from '../user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-permissions',
@@ -16,7 +17,8 @@ export class UserPermissionsComponent {
     private fb: FormBuilder,
     private userService: UserService,
     public dialogRef: MatDialogRef<UserPermissionsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private snackBar: MatSnackBar
   ) {
     this.user = data;
     this.permissionsForm = this.fb.group({
@@ -37,11 +39,13 @@ export class UserPermissionsComponent {
       can_edit_scenario: updatedPermissions.canEditScenario,
       can_delete_scenario: updatedPermissions.canDeleteScenario
     }).subscribe(
-      () => {
+      (response) => {
         this.dialogRef.close({ ...this.user, ...updatedPermissions });
+        this.snackBar.open('Permissions updated successfully', 'Close', { duration: 3000 });
       },
       error => {
         console.error('Error updating permissions:', error);
+        this.snackBar.open('Error updating permissions', 'Close', { duration: 3000 });
       }
     );
   }
