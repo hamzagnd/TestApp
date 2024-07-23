@@ -4,39 +4,47 @@
   <div class="stepper-table-container">
     <table mat-table [dataSource]="paginatedSteps" class="mat-elevation-z8 custom-table">
       <ng-container matColumnDef="stepNumber">
-        <th mat-header-cell *matHeaderCellDef class="header-cell">Step #</th>
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">Step #</th>
         <td mat-cell *matCellDef="let step; let i = index">{{ i + 1 + (pageIndex * pageSize) }}</td>
       </ng-container>
-      <ng-container matColumnDef="category">
-        <th mat-header-cell *matHeaderCellDef class="header-cell">Step Procedure</th>
-        <td mat-cell *matCellDef="let step">{{ step.category }}</td>
+      <ng-container matColumnDef="stepName">
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 30%;">Step Name</th>
+        <td mat-cell *matCellDef="let step">{{ step.step_name }}</td>
       </ng-container>
-      <ng-container matColumnDef="success_criteria">
-        <th mat-header-cell *matHeaderCellDef class="header-cell">Step Criteria</th>
-        <td mat-cell *matCellDef="let step">{{ step.success_criteria }}</td>
+      <ng-container matColumnDef="stepProcedure">
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 30%;">Step Procedure</th>
+        <td mat-cell *matCellDef="let step">{{ step.step_procedure }}</td>
+      </ng-container>
+      <ng-container matColumnDef="stepCriteria">
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 20%;">Step Criteria</th>
+        <td mat-cell *matCellDef="let step">{{ step.step_criteria }}</td>
       </ng-container>
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="header-cell">Actions</th>
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">Actions</th>
         <td mat-cell *matCellDef="let step; let i = index">
           <button mat-icon-button (click)="editStep(i)"><mat-icon>edit</mat-icon></button>
           <button mat-icon-button (click)="deleteStep(i)"><mat-icon>delete</mat-icon></button>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="['stepNumber', 'category', 'success_criteria', 'actions']" class="sticky-header"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['stepNumber', 'category', 'success_criteria', 'actions'];"></tr>
+      <tr mat-header-row *matHeaderRowDef="['stepNumber', 'stepName', 'stepProcedure', 'stepCriteria', 'actions']" class="sticky-header"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['stepNumber', 'stepName', 'stepProcedure', 'stepCriteria', 'actions'];"></tr>
     </table>
   </div>
   <mat-paginator [length]="steps.length" [pageSize]="pageSize" (page)="handlePageEvent($event)" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   <h3>Add/Edit Step</h3>
   <form [formGroup]="stepForm" class="stepper-form">
     <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Step Name</mat-label>
+      <input matInput formControlName="step_name" required>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
       <mat-label>Step Procedure</mat-label>
-      <input matInput formControlName="category" required>
+      <input matInput formControlName="step_procedure" required>
     </mat-form-field>
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Step Criteria</mat-label>
-      <input matInput formControlName="success_criteria" required>
+      <input matInput formControlName="step_criteria" required>
     </mat-form-field>
   </form>
 

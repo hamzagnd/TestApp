@@ -7,28 +7,28 @@
   <div class="permissions-container">
     <div class="permission-item">
       <span>Can Edit User:</span>
-      <mat-radio-group [(ngModel)]="permissionsForm.controls.canEditUser.value">
+      <mat-radio-group [formControl]="permissionsForm.controls['canEditUser']">
         <mat-radio-button [value]="true">Yes</mat-radio-button>
         <mat-radio-button [value]="false">No</mat-radio-button>
       </mat-radio-group>
     </div>
     <div class="permission-item">
       <span>Can Delete User:</span>
-      <mat-radio-group [(ngModel)]="permissionsForm.controls.canDeleteUser.value">
+      <mat-radio-group [formControl]="permissionsForm.controls['canDeleteUser']">
         <mat-radio-button [value]="true">Yes</mat-radio-button>
         <mat-radio-button [value]="false">No</mat-radio-button>
       </mat-radio-group>
     </div>
     <div class="permission-item">
       <span>Can Edit Scenario:</span>
-      <mat-radio-group [(ngModel)]="permissionsForm.controls.canEditScenario.value">
+      <mat-radio-group [formControl]="permissionsForm.controls['canEditScenario']">
         <mat-radio-button [value]="true">Yes</mat-radio-button>
         <mat-radio-button [value]="false">No</mat-radio-button>
       </mat-radio-group>
     </div>
     <div class="permission-item">
       <span>Can Delete Scenario:</span>
-      <mat-radio-group [(ngModel)]="permissionsForm.controls.canDeleteScenario.value">
+      <mat-radio-group [formControl]="permissionsForm.controls['canDeleteScenario']">
         <mat-radio-button [value]="true">Yes</mat-radio-button>
         <mat-radio-button [value]="false">No</mat-radio-button>
       </mat-radio-group>

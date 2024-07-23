@@ -13,7 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TestControlComponent } from './test-control/test-control.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';  
@@ -45,9 +45,7 @@ import { AuthGuard } from './auth.guard';
 
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-
-
-
+import { AuthInterceptor } from './auth-interceptor';
 
 
 @NgModule({
@@ -59,14 +57,11 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     UserAddComponent,
     MenuComponent,
     ReportTableComponent,
-
     UsersComponent,
     UserPermissionsComponent,
     LoginComponent,
     EditDialogComponent,
     ConfirmDialogComponent,
-    
-
   ],
   imports: [
     BrowserModule,
@@ -93,7 +88,6 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MatIcon,
     MatCardModule,
     AppRoutingModule,
-
     RouterModule,
     MatIconModule,
     MatMenuModule,
@@ -101,13 +95,12 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MatDividerModule,
     MatCheckboxModule,
     MatRadioModule,
-    MatSnackBarModule,  
-
+    MatSnackBarModule,
   ],
-
-  providers: [ AuthGuard],
-
+  providers: [
+    AuthGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
-
 })
 export class AppModule { }
