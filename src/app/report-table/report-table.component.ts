@@ -16,9 +16,10 @@ import { ScenarioService } from "../scenario.service";
 export class ReportTableComponent implements OnInit {
 
   columns: ColumnDefinition[] = [
-    new ColumnDefinition('category', 'Name'),
-    new ColumnDefinition('success_criteria', 'State'),
-    new ColumnDefinition('action','Action')
+    new ColumnDefinition('step_name', 'Name'),
+    new ColumnDefinition('step_procedure', 'Kategori'),
+    new ColumnDefinition('step_criteria', 'State'),
+    new ColumnDefinition('action', 'Action')
   ];
 
   data: TableData<Test>[] = [];
@@ -29,7 +30,9 @@ export class ReportTableComponent implements OnInit {
   public scenarioName: string = '';
   public runDate: Date | null = null;
 
-  constructor(private reportService: ReportService, private scenarioService: ScenarioService) {}
+
+  constructor(private reportService: ReportService, private scenarioService: ScenarioService) {
+  }
 
   ngOnInit(): void {
     this.data = this.reportService.getData();
@@ -42,31 +45,24 @@ export class ReportTableComponent implements OnInit {
 
   onRowClick(test: Test) {
     //console.log('Row clicked:', test);
+
   }
 
   updateDonutChartData() {
-    const passed = this.data.filter(item => item.data.success_criteria === 'geçti').length;
-    const failed = this.data.filter(item => item.data.success_criteria === 'kaldı').length;
-    const notTested = this.data.filter(item => item.data.success_criteria === 'Test Edilmedi').length;
+    const passed = this.data.filter(item => item.data.step_criteria === 'geçti').length;
+    const failed = this.data.filter(item => item.data.step_criteria === 'kaldı').length;
+    const notTested = this.data.filter(item => item.data.step_criteria === 'Test Edilmedi').length;
 
     this.donutChartData = [
-      { name: 'Geçti', value: passed },
-      { name: 'Kaldı', value: failed },
-      { name: 'Test Edilmedi', value: notTested }
+      {name: 'Geçti', value: passed},
+      {name: 'Kaldı', value: failed},
+      {name: 'Test Edilmedi', value: notTested}
     ];
   }
 
   onCriteriaChange(step: any, criteria: string) {
     console.log(step.data.id, criteria, step.data);
-    step.data.success_criteria = criteria;
-    this.scenarioService.updateStep(step.data.scenario, step.data).subscribe(
-      response => {
-        console.log('Step updated successfully', response);
-        this.updateDonutChartData();
-      },
-      error => {
-        console.error('Error updating step', error);
-      }
-    );
+    this.reportService.updateSuccessCriteria(step.data.id, criteria);
+    this.updateDonutChartData();
   }
 }

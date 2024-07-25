@@ -89,23 +89,28 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
 
   runTest(test: Test): void {
     event.stopPropagation();
-    this.scenarioService.getSteps(test.id).subscribe(
-      steps => {
+    console.log(test.id);
+
+    this.scenarioService.getScenario(test.id).subscribe(
+      scenario => {
+        const steps = scenario.steps;
         const reportData = steps.map(step => new TableData<Test>(step));
+        console.log(steps);
         this.reportDataSource.data = reportData;
         this.reportService.setData(reportData);
         this.reportService.setScenarioName(test.name);
         this.reportService.setRunDate(new Date());
 
-        console.log("run butonuna basıldı ve adımlar yüklendi", steps);
+        console.log("Run butonuna basıldı ve adımlar yüklendi", steps);
         console.log(`Scenario Name: ${test.name}`);
         this.router.navigate(['/report']);
       },
       error => {
-        console.error('Error fetching steps', error);
+        console.error('Error fetching scenario', error);
       }
     );
   }
+
 
   openDialog(): void {
     const dialogRef = this.dialog.open(ScenarioStepperComponent, {
