@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog'; // MatDialog'u ekleyin
+import { MatDialog } from '@angular/material/dialog';
 import { ScenarioService } from './scenario.service';
 import { AuthService } from './auth.service';
-import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component'; // ScenarioStepperComponent'i ekleyin
+import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     private scenarioService: ScenarioService,
     private authService: AuthService,
     private router: Router,
-    public dialog: MatDialog // MatDialog'u inject edin
+    public dialog: MatDialog
   ) { 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.loadAuthState();  // Ensure auth state is loaded on init
+    this.authService.loadAuthState();
     this.handleLoginRedirect();
     this.getScenarios();
     this.currentUser = this.authService.getCurrentUser();
@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
 
   handleLoginRedirect(): void {
     if (this.authService.isLoggedIn() && this.currentRoute === '/login') {
-      this.router.navigate(['/test']);  // Redirect to test page
+      this.router.navigate(['/test']);
     } else if (!this.authService.isLoggedIn() && this.currentRoute !== '/login') {
       this.router.navigate(['/login']);
     }
@@ -79,7 +79,6 @@ export class AppComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // Handle the result if necessary
     });
   }
 

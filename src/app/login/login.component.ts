@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe(
         response => {
-          if (response && response.access) {
+          if (response && response.message === 'Login successful') {
             this.router.navigate(['/test']);  // Navigate to test page after successful login
           } else {
             console.error('Login failed');

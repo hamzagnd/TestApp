@@ -13,7 +13,7 @@ import { AuthService } from '../auth.service';
 })
 export class UsersComponent implements OnInit {
   displayedColumns: string[] = ['username', 'email', 'first_name', 'last_name', 'permissions', 'actions'];
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource([]);
 
   constructor(private dialog: MatDialog, private userService: UserService, private authService: AuthService) { }
 
@@ -22,10 +22,13 @@ export class UsersComponent implements OnInit {
   }
 
   loadUsers(): void {
-    this.userService.getUsers().subscribe(users => {
-      this.dataSource = new MatTableDataSource(users);
-    }, error => {
-      console.error('Error loading users:', error);
+    this.userService.getUsers().subscribe({
+      next: (users) => {
+        this.dataSource.data = users;
+      },
+      error: (error) => {
+        console.error('Error loading users:', error);
+      }
     });
   }
 
