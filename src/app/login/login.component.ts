@@ -26,10 +26,8 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log('Login form submitted:', this.loginForm.value);  // Debugging line
       this.authService.login(this.loginForm.value).subscribe(
         response => {
-          console.log('Login response:', response);  // Debugging line
           if (response && response.message === 'Login successful') {
             this.router.navigate(['/test']);  // Navigate to test page after successful login
           } else {

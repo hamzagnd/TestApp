@@ -13,7 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TestControlComponent } from './test-control/test-control.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -41,17 +41,21 @@ import { ViewEncapsulation } from '@angular/core'; // import statement
 
 import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select'; // Bu satırı ekleyin
 import { MatRadioModule } from '@angular/material/radio';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth.guard';
 
+
+import {ColumnTemplateDirective} from "./ColumnTemplateDirective";
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import {ColumnTemplateDirective} from "./ColumnTemplateDirective";
+import { JwtModule } from '@auth0/angular-jwt';
+import { TokenInterceptor } from './interceptors/token.interceptor';
 
-
-
-
+export function tokenGetter() {
+  return localStorage.getItem('access_token');
+}
 
 @NgModule({
   declarations: [
@@ -62,12 +66,13 @@ import {ColumnTemplateDirective} from "./ColumnTemplateDirective";
     UserAddComponent,
     MenuComponent,
     ReportTableComponent,
-
     UsersComponent,
     UserPermissionsComponent,
     LoginComponent,
     EditDialogComponent,
     ConfirmDialogComponent,
+
+
 
 
   ],
@@ -96,22 +101,29 @@ import {ColumnTemplateDirective} from "./ColumnTemplateDirective";
     MatIcon,
     MatCardModule,
     AppRoutingModule,
-
     RouterModule,
     MatIconModule,
     MatMenuModule,
     NgxChartsModule,
     MatDividerModule,
     MatCheckboxModule,
+    MatSelectModule, // Bu satırı ekleyin
     MatRadioModule,
     MatSnackBarModule,
+
     ColumnTemplateDirective,
-
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ['localhost:8000'],
+        disallowedRoutes: ['http://localhost:8000/api/login/']
+      }
+    })
   ],
-
-  providers: [ AuthGuard],
-
+  providers: [
+    AuthGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
-
 })
 export class AppModule { }

@@ -40,8 +40,9 @@ export class ScenarioStepperComponent implements OnInit {
 
   ngOnInit(): void {
     this.stepForm = this.fb.group({
-      category: ['', Validators.required],
-      success_criteria: ['', Validators.required]
+      step_name: ['', Validators.required],
+      step_procedure: ['', Validators.required],
+      step_criteria: ['', Validators.required]
     });
 
     if (this.scenario) {
@@ -50,9 +51,11 @@ export class ScenarioStepperComponent implements OnInit {
   }
 
   loadSteps(): void {
-    this.scenarioService.getSteps(this.scenario.id).subscribe(steps => {
-      this.steps = steps;
+    this.scenarioService.getScenario(this.scenario.id).subscribe(scenario => {
+      this.steps = scenario.steps;
       this.updatePaginatedSteps();
+    }, error => {
+      console.error('Error loading steps:', error);
     });
   }
 
@@ -75,15 +78,16 @@ export class ScenarioStepperComponent implements OnInit {
         const absoluteIndex = this.pageIndex * this.pageSize + this.selectedStepIndex;
         this.scenarioService.updateStep(this.scenario.id, { ...newStep, id: this.steps[absoluteIndex].id }).subscribe(updatedStep => {
           this.steps[absoluteIndex] = updatedStep;
+
           this.selectedStepIndex = null;
           this.stepForm.reset();
-          this.loadSteps(); // Refresh the page
+          this.loadSteps(); // Refresh the steps
         });
       } else {
         this.scenarioService.addStep(this.scenario.id, newStep).subscribe(step => {
           this.steps.push(step);
           this.stepForm.reset();
-          this.loadSteps(); // Refresh the page
+          this.loadSteps(); // Refresh the steps
         }, error => {
           console.error('Error adding step:', error);
         });
@@ -92,7 +96,7 @@ export class ScenarioStepperComponent implements OnInit {
   }
 
   editStep(index: number): void {
-    const absoluteIndex = this.pageIndex * this.pageSize + index;
+    const absoluteIndex = this.pageIndex * this.pageSize + index
     this.selectedStepIndex = index;
     this.stepForm.patchValue(this.steps[absoluteIndex]);
   }
@@ -106,7 +110,7 @@ export class ScenarioStepperComponent implements OnInit {
         const stepId = this.steps[absoluteIndex].id;
         this.scenarioService.deleteStep(this.scenario.id, stepId).subscribe(() => {
           this.steps.splice(absoluteIndex, 1);
-          this.loadSteps(); // Refresh the page
+          this.loadSteps(); // Refresh the steps
         });
       }
     });

@@ -25,4 +25,8 @@ export class UserService {
   getUserPermissions(userId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/users/${userId}/permissions/`);
   }
+
+  deleteUser(userId: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/users/${userId}/`);
+  }
 }

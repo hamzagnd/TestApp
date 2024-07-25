@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class AuthService {
   private loggedIn = false;
   private currentUser: any = {};  // Store user information
   private userPermissions: any = {};  // Store user permissions
+  private jwtHelper = new JwtHelperService();
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadAuthState();
@@ -22,19 +24,52 @@ export class AuthService {
     });
   }
 
-  public loadAuthState(): void {  
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+  }
+
+  public loadAuthState(): void {
     if (this.isBrowser()) {
-      this.loggedIn = localStorage.getItem('loggedIn') === 'true';
-      this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      this.userPermissions = JSON.parse(localStorage.getItem('userPermissions') || '{}');
+      try {
+        this.loggedIn = localStorage.getItem('loggedIn') === 'true';
+        const currentUser = localStorage.getItem('currentUser');
+        const userPermissions = localStorage.getItem('userPermissions');
+        const token = localStorage.getItem('access_token');
+
+        this.currentUser = this.parseJsonSafe(currentUser);
+        this.userPermissions = this.parseJsonSafe(userPermissions);
+
+        if (token && !this.jwtHelper.isTokenExpired(token)) {
+          this.loggedIn = true;
+        } else {
+          this.loggedIn = false;
+          this.clearAuthState();
+        }
+      } catch (error) {
+        console.error('Error parsing JSON from localStorage:', error);
+        this.loggedIn = false;
+        this.currentUser = {};
+        this.userPermissions = {};
+        this.clearAuthState();
+      }
+    }
+  }
+
+  private parseJsonSafe(jsonString: string | null): any {
+    try {
+      if (jsonString === null || jsonString === undefined || jsonString === 'undefined') {
+        return {};
+      }
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error('Error parsing JSON string:', error);
+      return {};
     }
   }
 
   login(userData: any): Observable<any> {
-    console.log('Sending login request:', userData);  // Debugging line
     return this.http.post<any>(`${this.apiUrl}/login/`, userData).pipe(
       tap(response => {
-        console.log('Received login response:', response);  // Debugging line
         if (response.message === 'Login successful') {
           this.loggedIn = true;
           this.currentUser = response.user;
@@ -43,6 +78,7 @@ export class AuthService {
             localStorage.setItem('loggedIn', 'true');
             localStorage.setItem('currentUser', JSON.stringify(response.user));
             localStorage.setItem('userPermissions', JSON.stringify(response.permissions));
+            localStorage.setItem('access_token', response.access);
           }
           this.router.navigate(['/test']);  // Redirect to test page after login
         }
@@ -50,21 +86,21 @@ export class AuthService {
       catchError(this.handleError<any>('login', null))
     );
   }
-  
+
   logout(): void {
     this.loggedIn = false;
     this.currentUser = {};
     this.userPermissions = {};
-    if (this.isBrowser()) {
-      localStorage.removeItem('loggedIn');
-      localStorage.removeItem('currentUser');
-      localStorage.removeItem('userPermissions');
-    }
+    this.clearAuthState();
     this.router.navigate(['/login']);
   }
 
   isLoggedIn(): boolean {
-    return this.loggedIn;
+    if (this.isBrowser()) {
+      const token = localStorage.getItem('access_token');
+      return token != null && !this.jwtHelper.isTokenExpired(token);
+    }
+    return false;
   }
 
   getCurrentUser(): any {
@@ -91,13 +127,26 @@ export class AuthService {
     return this.userPermissions[permission] || false;
   }
 
-  private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+  isSuperUser(): boolean {
+    return this.currentUser.is_superuser || false;
+  }
+
+  isStaff(): boolean {
+    return this.currentUser.is_staff || false;
+  }
+
+  private clearAuthState(): void {
+    if (this.isBrowser()) {
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('userPermissions');
+      localStorage.removeItem('access_token');
+    }
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(`${operation} failed:`, error);  // Debugging line
+      console.error(`${operation} failed:`, error);
       return of(result as T);
     };
   }

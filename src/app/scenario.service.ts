@@ -14,6 +14,10 @@ export class ScenarioService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
+  getScenario(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}${id}/`);
+  }
+
   addScenario(scenario: any): Observable<any> {
     return this.http.post(this.apiUrl, scenario);
   }
