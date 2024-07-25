@@ -5,7 +5,3 @@ platformBrowserDynamic().bootstrapModule(AppModule, {
   ngZoneEventCoalescing: true
 })
   .catch(err => console.error(err));
-  localStorage.removeItem('loggedIn');
-  localStorage.removeItem('currentUser');
-  localStorage.removeItem('userPermissions');
-  localStorage.removeItem('token');

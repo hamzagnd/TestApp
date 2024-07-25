@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class AuthService {
   private loggedIn = false;
   private currentUser: any = {};  // Store user information
   private userPermissions: any = {};  // Store user permissions
+  private jwtHelper = new JwtHelperService();
 
   constructor(private http: HttpClient, private router: Router) {
     this.loadAuthState();
@@ -22,21 +24,27 @@ export class AuthService {
     });
   }
 
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+  }
+
   public loadAuthState(): void {
     if (this.isBrowser()) {
       try {
         this.loggedIn = localStorage.getItem('loggedIn') === 'true';
         const currentUser = localStorage.getItem('currentUser');
         const userPermissions = localStorage.getItem('userPermissions');
+        const token = localStorage.getItem('access_token');
 
         this.currentUser = this.parseJsonSafe(currentUser);
         this.userPermissions = this.parseJsonSafe(userPermissions);
 
-        const token = localStorage.getItem('token');
-        if (!token) {
+        if (token && !this.jwtHelper.isTokenExpired(token)) {
+          this.loggedIn = true;
+        } else {
           this.loggedIn = false;
+          this.clearAuthState();
         }
-        console.log('Loaded permissions:', this.userPermissions);  // Debugging line
       } catch (error) {
         console.error('Error parsing JSON from localStorage:', error);
         this.loggedIn = false;
@@ -60,10 +68,9 @@ export class AuthService {
   }
 
   login(userData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/token/`, userData).pipe(
+    return this.http.post<any>(`${this.apiUrl}/login/`, userData).pipe(
       tap(response => {
-        console.log('Backend response:', response);  // Debugging line
-        if (response.access) {
+        if (response.message === 'Login successful') {
           this.loggedIn = true;
           this.currentUser = response.user;
           this.userPermissions = response.permissions;
@@ -71,8 +78,7 @@ export class AuthService {
             localStorage.setItem('loggedIn', 'true');
             localStorage.setItem('currentUser', JSON.stringify(response.user));
             localStorage.setItem('userPermissions', JSON.stringify(response.permissions));
-            localStorage.setItem('token', response.access);
-            console.log('Permissions saved:', this.userPermissions);  // Debugging line
+            localStorage.setItem('access_token', response.access);
           }
           this.router.navigate(['/test']);  // Redirect to test page after login
         }
@@ -80,7 +86,6 @@ export class AuthService {
       catchError(this.handleError<any>('login', null))
     );
   }
-  
 
   logout(): void {
     this.loggedIn = false;
@@ -91,7 +96,11 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.loggedIn;
+    if (this.isBrowser()) {
+      const token = localStorage.getItem('access_token');
+      return token != null && !this.jwtHelper.isTokenExpired(token);
+    }
+    return false;
   }
 
   getCurrentUser(): any {
@@ -99,7 +108,6 @@ export class AuthService {
   }
 
   canEditUser(): boolean {
-    console.log('canEditUser permission:', this.userPermissions.canEditUser);  // Debugging line
     return this.userPermissions.canEditUser || false;
   }
 
@@ -124,17 +132,13 @@ export class AuthService {
       localStorage.removeItem('loggedIn');
       localStorage.removeItem('currentUser');
       localStorage.removeItem('userPermissions');
-      localStorage.removeItem('token');
+      localStorage.removeItem('access_token');
     }
-  }
-
-  private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(`${operation} failed:`, error);  // Debugging line
+      console.error(`${operation} failed:`, error);
       return of(result as T);
     };
   }

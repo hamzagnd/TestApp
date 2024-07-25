@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('token');
-
+    const token = localStorage.getItem('access_token');
     if (token) {
       request = request.clone({
         setHeaders: {
@@ -15,7 +14,6 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
     }
-
     return next.handle(request);
   }
 }
