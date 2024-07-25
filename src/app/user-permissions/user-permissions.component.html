@@ -1,9 +1,19 @@
 <h2 mat-dialog-title>User Permissions for {{ user.username }}</h2>
-<mat-dialog-content>
+<mat-dialog-content [formGroup]="permissionsForm">
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Username</mat-label>
     <input matInput [value]="user.username" disabled>
   </mat-form-field>
+  
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status" (selectionChange)="onStatusChange()">
+      <mat-option value="superuser" *ngIf="currentUser.is_superuser">Superuser</mat-option>
+      <mat-option value="staff">Staff</mat-option>
+      <mat-option value="active">Active</mat-option>
+    </mat-select>
+  </mat-form-field>
+  
   <div class="permissions-container">
     <div class="permission-item">
       <span>Can Edit User:</span>
