@@ -13,7 +13,7 @@ export class EditDialogComponent {
   ) {}
 
   onSave(): void {
-    this.dialogRef.close(this.data);
+    this.dialogRef.close(this.data.row);
   }
 
   onCancel(): void {

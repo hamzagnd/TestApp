@@ -17,6 +17,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppRoutingModule } from './app-routing.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -35,12 +36,18 @@ import { UsersComponent } from './users/users.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { ViewEncapsulation } from '@angular/core'; // import statement
+
+
 import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select'; // Bu satırı ekleyin
 import { MatRadioModule } from '@angular/material/radio';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth.guard';
+
+
+import {ColumnTemplateDirective} from "./ColumnTemplateDirective";
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -64,6 +71,10 @@ export function tokenGetter() {
     LoginComponent,
     EditDialogComponent,
     ConfirmDialogComponent,
+
+
+
+
   ],
   imports: [
     BrowserModule,
@@ -99,6 +110,8 @@ export function tokenGetter() {
     MatSelectModule, // Bu satırı ekleyin
     MatRadioModule,
     MatSnackBarModule,
+
+    ColumnTemplateDirective,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

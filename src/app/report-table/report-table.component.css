@@ -1,34 +1,50 @@
-::ng-deep .passed-state {
+:host ::ng-deep .passed-state {
   color: green;
 }
 
-::ng-deep .failed-state {
+:host ::ng-deep .failed-state {
   color: red;
 }
 
-table {
+:host table {
   width: 100%;
 }
 
-.mat-elevation-z8 {
+:host .mat-elevation-z8 {
   margin-bottom: 20px;
 }
 
-.donut-chart-container {
+:host .donut-chart-container {
   display: flex;
   justify-content: center;
   margin-top: 20px;
 }
 
-.donut-chart {
+:host .donut-chart {
   width: 800px;
   height: 600px;
 }
 
-.mat-tab-group {
+:host .mat-tab-group {
   margin-bottom: 20px; /* mat-tab-group ile aşağıdaki içerik arasındaki boşluk */
 }
 
-.table-container {
+:host .table-container {
   margin-top: 20px; /* mat-tab-group ile tablonun üst kısmı arasındaki boşluk */
+}
+
+:host .scenario-info {
+  margin: 20px;
+  padding: 10px;
+  font-family: Arial, sans-serif; /* Fontu daha düzgün ve okunabilir hale getirmek için */
+  font-size: 10px; /* Font boyutunu küçült */
+  color: #333; /* Metin rengini daha koyu yaparak okunabilirliği artır */
+  border: 1px solid #ddd; /* Hafif bir sınır ekleyerek görsel ayrım sağla */
+  border-radius: 4px; /* Köşeleri yuvarlat */
+  background-color: #f9f9f9; /* Arka plan rengini açık tut */
+}
+
+:host .scenario-info h2 {
+  margin: 0; /* Başlık etrafındaki varsayılan boşlukları kaldır */
+  font-size: 10px; /* Başlık için biraz daha büyük font boyutu */
 }
