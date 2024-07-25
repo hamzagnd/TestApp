@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit, OnChanges, SimpleChanges, TemplateRef, QueryList, ContentChildren } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -9,7 +9,7 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ColumnDefinition, ColumnType } from '../column';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import {Test} from "../test-control/test";
+import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
 import {Router} from "@angular/router";
 
 @Component({
@@ -20,10 +20,21 @@ import {Router} from "@angular/router";
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit, OnChanges {
   @Input() columns: ColumnDefinition[] = [];
   @Input() dataSource: MatTableDataSource<TableData<T>> = new MatTableDataSource<TableData<T>>([]);
+  @Input() showAddDataForm: boolean = false;
+  @Input() showExportButton: boolean = false;
+  @Input() showRefreshButton: boolean = false;
 
   newData: Partial<T> = {};
-  @Output() rowClick = new EventEmitter<T>();
 
+
+  @Output() rowClick = new EventEmitter<T>();
+  @Output() runTestClick = new EventEmitter<T>();
+
+  @ContentChildren(ColumnTemplateDirective) columnTemplates: QueryList<ColumnTemplateDirective>;
+
+  @ViewChild('addDataTemplate') addDataTemplate: TemplateRef<any>;
+  @ViewChild('exportTemplate') exportTemplate: TemplateRef<any>;
+  @ViewChild('customColumn') customColumnTemplate: TemplateRef<T>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -31,8 +42,18 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 20];
   displayedColumnKeys: string[] = [];
+  columnTemplateMap = new Map<string, TemplateRef<any>>();  //@Input() customColumnTemplate!: TemplateRef<any>;
 
   constructor(private scenarioService: ScenarioService,private router: Router, public dialog: MatDialog) {}
+
+  ngAfterContentInit() {
+    this.columnTemplates.forEach(template => {
+      this.columnTemplateMap.set(template.columnName, template.templateRef);
+    });
+  }
+  getTemplateForColumn(columnKey: string): TemplateRef<any> | null {
+    return this.columnTemplateMap.get(columnKey) || null;
+  }
 
   ngOnInit(): void {
     //this.fetchScenarios();
@@ -65,10 +86,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     );
   }
 
-  handlePageEvent(event: PageEvent) {
-    this.pageSize = event.pageSize;
-    this.length = event.length;
-  }
 
   addData() {
     const dataCopy: T = { ...this.newData } as T;
@@ -104,6 +121,10 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     this.rowClick.emit(row.data);
   }
 
+  onRunTestClick(element: any): void {
+    this.runTestClick.emit(element);
+  }
+
   editRow(row: TableData<T>) {
     const dialogRef = this.dialog.open(EditDialogComponent, {
       width: '250px',
@@ -112,19 +133,27 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        row.data = { ...result };
-        this.dataSource.data = [...this.dataSource.data];
+        console.log('Result:', result);
+        const index = this.dataSource.data.findIndex(d => d.data.id === row.data.id);
+        if (index !== -1) {
+          this.scenarioService.updateScenario(row.data.id, result).subscribe(
+            response => {
+              console.log('edited successfully', response);
+            },
+            error => {
+              console.error('Error editing scenario', error);
+            }
+          );
+          this.dataSource.data[index] = new TableData<T>(result);
+          this.dataSource.data = [...this.dataSource.data];
+        } else {
+          console.error('Row not found in dataSource');
+        }
       }
     });
   }
-  runTest(test: Test) {
-    console.log("run butonuna basıldı");
-    this.router.navigate(['/report']);
-  }
 
-  runRow(element: TableData<T>) {
-    console.log('Run Row:', element);
-  }
+
 
   getStateClass(state: string): string {
     if (state === 'geçti') {
@@ -136,6 +165,10 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     } else {
       return '';
     }
+  }
+
+  refreshTable(): void {
+    //this.getScenarios();
   }
 
 }

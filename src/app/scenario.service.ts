@@ -18,11 +18,14 @@ export class ScenarioService {
     return this.http.post(this.apiUrl, scenario);
   }
 
-  updateScenario(scenario: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}${scenario.id}/`, scenario);
+
+  updateScenario(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}${id}/`, data);
+  }
+  deleteScenario(scenarioId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${scenarioId}/`);
   }
 
-  // New methods for steps
   getSteps(scenarioId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}${scenarioId}/steps/`);
   }
@@ -32,6 +35,7 @@ export class ScenarioService {
   }
 
   updateStep(scenarioId: number, step: any): Observable<any> {
+    //console.log(`${this.apiUrl}${scenarioId}/steps/${step.id}/`, { ...step, scenario: scenarioId });
     return this.http.put(`${this.apiUrl}${scenarioId}/steps/${step.id}/`, { ...step, scenario: scenarioId });
   }
 

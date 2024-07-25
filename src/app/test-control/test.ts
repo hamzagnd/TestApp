@@ -4,5 +4,11 @@ export interface Test {
   owner: string;
   time: string;
   state: string;
+  success_criteria?: string;
+
+}
+
+export interface Step{
+  name: string;
 
 }

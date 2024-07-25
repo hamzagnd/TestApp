@@ -19,7 +19,6 @@ export class ScenarioStepperComponent implements OnInit {
   stepForm: FormGroup;
   selectedStepIndex: number | null = null;
 
-  // Paginator settings
   pageSize = 5;
   pageIndex = 0;
   paginatedSteps: any[] = [];
@@ -73,8 +72,9 @@ export class ScenarioStepperComponent implements OnInit {
     if (this.stepForm.valid) {
       const newStep = this.stepForm.value;
       if (this.selectedStepIndex !== null) {
-        this.scenarioService.updateStep(this.scenario.id, { ...newStep, id: this.steps[this.selectedStepIndex].id }).subscribe(updatedStep => {
-          this.steps[this.selectedStepIndex] = updatedStep;
+        const absoluteIndex = this.pageIndex * this.pageSize + this.selectedStepIndex;
+        this.scenarioService.updateStep(this.scenario.id, { ...newStep, id: this.steps[absoluteIndex].id }).subscribe(updatedStep => {
+          this.steps[absoluteIndex] = updatedStep;
           this.selectedStepIndex = null;
           this.stepForm.reset();
           this.loadSteps(); // Refresh the page
@@ -92,8 +92,8 @@ export class ScenarioStepperComponent implements OnInit {
   }
 
   editStep(index: number): void {
-    this.selectedStepIndex = index;
     const absoluteIndex = this.pageIndex * this.pageSize + index;
+    this.selectedStepIndex = index;
     this.stepForm.patchValue(this.steps[absoluteIndex]);
   }
 
@@ -109,17 +109,6 @@ export class ScenarioStepperComponent implements OnInit {
           this.loadSteps(); // Refresh the page
         });
       }
-    });
-  }
-
-  submit(): void {
-    const updatedScenario = {
-      ...this.scenario,
-      steps: this.steps
-    };
-    this.scenarioService.updateScenario(updatedScenario).subscribe(() => {
-      this.scenarioUpdated.emit(updatedScenario);
-      this.dialogRef.close(updatedScenario);
     });
   }
 

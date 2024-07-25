@@ -1,31 +1,34 @@
 <div>
+    <div *ngIf="showExportButton">
+    <button mat-raised-button color="accent" (click)="exportToPDF()">Export to PDF</button>
+  </div>
+
+  <div *ngIf="showRefreshButton">
+    <button mat-raised-button color="accent" (click)="refreshTable()">Refresh</button>
+  </div>
+</div>
+
+<div *ngIf="showAddDataForm">
   <mat-form-field appearance="fill" *ngFor="let column of columns">
     <mat-label>{{ column.header }}</mat-label>
     <input matInput [(ngModel)]="newData[column.key]" placeholder="{{ column.header }}">
   </mat-form-field>
   <button mat-raised-button color="primary" (click)="addData()">Add</button>
-  <button mat-raised-button color="accent" (click)="exportToPDF()">Export to PDF</button>
 </div>
 
+
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
+  <ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column.key">
     <th mat-header-cell *matHeaderCellDef> {{ column.header }} </th>
     <td mat-cell *matCellDef="let element" (click)="onRowClick(element)" [ngClass]="getStateClass(element.data[column.key])">
-      <ng-container [ngSwitch]="column.type">
-        <ng-container *ngSwitchCase="'string'">
-          {{ element.data[column.key] }}
+      <ng-container *ngIf="getTemplateForColumn(column.key); else defaultTemplate" [ngTemplateOutlet]="getTemplateForColumn(column.key)" [ngTemplateOutletContext]="{ $implicit: element, index: i }"></ng-container>
+      <ng-template #defaultTemplate>
+        <ng-container [ngSwitch]="column.type">
+          <ng-container *ngSwitchCase="'string'">
+            {{ element.data[column.key] }}
+          </ng-container>
         </ng-container>
-        <ng-container *ngSwitchCase="'enum'">
-          {{ element.data[column.key] }}
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-          {{ element.data[column.key] }}
-        </ng-container>
-        <ng-container *ngSwitchCase="'custom'">
-          <button mat-button color="primary" (click)="runTest(element.data)">Run</button>
-        </ng-container>
-
-        </ng-container>
+      </ng-template>
     </td>
   </ng-container>
 
@@ -40,5 +43,4 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumnKeys"></tr>
 </table>
 
-<mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
+<mat-paginator [pageSize]="5" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>

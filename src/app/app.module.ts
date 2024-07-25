@@ -16,7 +16,7 @@ import { TestControlComponent } from './test-control/test-control.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ScenarioStepperComponent } from './scenario-stepper/scenario-stepper.component';
 import { UserAddComponent } from './user-add/user-add.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';  
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppRoutingModule } from './app-routing.module';
@@ -36,15 +36,18 @@ import { UsersComponent } from './users/users.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { ViewEncapsulation } from '@angular/core'; // import statement
+
 
 import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './auth.guard'; 
+import { AuthGuard } from './auth.guard';
 
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import {ColumnTemplateDirective} from "./ColumnTemplateDirective";
 
 
 
@@ -65,7 +68,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     LoginComponent,
     EditDialogComponent,
     ConfirmDialogComponent,
-    
+
 
   ],
   imports: [
@@ -101,7 +104,8 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MatDividerModule,
     MatCheckboxModule,
     MatRadioModule,
-    MatSnackBarModule,  
+    MatSnackBarModule,
+    ColumnTemplateDirective,
 
   ],
 

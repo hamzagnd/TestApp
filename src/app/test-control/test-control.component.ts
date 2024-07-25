@@ -1,12 +1,13 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { ScenarioService } from '../scenario.service';
-import { TableData } from '../models/table-data.model';
-import { MatDialog } from '@angular/material/dialog';
-import { ScenarioStepperComponent } from '../scenario-stepper/scenario-stepper.component';
-import { Subscription } from 'rxjs';
-import { ColumnDefinition, ColumnType } from '../column';
-import { Router } from '@angular/router';
+import {Component, EventEmitter, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
+import {ScenarioService} from '../scenario.service';
+import {TableData} from '../models/table-data.model';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {ScenarioStepperComponent} from '../scenario-stepper/scenario-stepper.component';
+import {Subscription} from 'rxjs';
+import {ColumnDefinition, ColumnType} from '../column';
+import {Router} from '@angular/router';
+import {ReportService} from '../report.service';
 
 interface Test {
   id: number;
@@ -14,7 +15,8 @@ interface Test {
   user: string;
   version: string;
   state: string;
-  subItems?: Test[];
+  owner: string;
+  time: string;
 }
 
 @Component({
@@ -22,29 +24,38 @@ interface Test {
   templateUrl: './test-control.component.html',
   styleUrls: ['./test-control.component.css']
 })
+export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
 
-export class TestControlComponent implements OnInit, OnChanges {
+  @Output() runTestClick = new EventEmitter<Test>();
+
   columns: ColumnDefinition[] = [
     new ColumnDefinition('name', 'Name', ColumnType.STRING),
     new ColumnDefinition('user', 'User', ColumnType.STRING),
     new ColumnDefinition('version', 'Version', ColumnType.STRING),
-    new ColumnDefinition('state', 'State', ColumnType.ENUM),
-    new ColumnDefinition('run', 'Run', ColumnType.CUSTOM)
+    new ColumnDefinition('state', 'State', ColumnType.STRING),
+    new ColumnDefinition('run', 'Run', ColumnType.CUSTOM),
+    new ColumnDefinition('delete', 'Delete', ColumnType.CUSTOM)
   ];
 
   data: TableData<Test>[] = [];
   dataSource: MatTableDataSource<TableData<Test>> = new MatTableDataSource<TableData<Test>>();
   selectedTest: Test | null = null;
-  expandedElement: Test | null = null;
   private subscriptions: Subscription = new Subscription();
+  public dialogRef: MatDialogRef<ScenarioStepperComponent>;
 
   displayedColumnKeys: string[] = [];
+  reportDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
 
-  constructor(private scenarioService: ScenarioService, private router: Router, public dialog: MatDialog) {}
+  constructor(
+    private scenarioService: ScenarioService,
+    private reportService: ReportService,
+    private router: Router,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getScenarios();
-    this.displayedColumnKeys = this.columns.map(c => c.key).concat('run');
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,21 +81,30 @@ export class TestControlComponent implements OnInit, OnChanges {
     this.subscriptions.add(sub);
   }
 
-  onNameClick(test: Test): void {
-    this.selectedTest = test;
-    this.openDialog();
-  }
-
   onRowClick(test: Test): void {
+
     this.selectedTest = test;
     this.openDialog();
   }
 
+  runTest(test: Test): void {
+    event.stopPropagation();
+    this.scenarioService.getSteps(test.id).subscribe(
+      steps => {
+        const reportData = steps.map(step => new TableData<Test>(step));
+        this.reportDataSource.data = reportData;
+        this.reportService.setData(reportData);
+        this.reportService.setScenarioName(test.name);
+        this.reportService.setRunDate(new Date());
 
-  runTest(test: Test) {
-
-    console.log("run butonuna basıldı");
-    this.router.navigate(['/report']);
+        console.log("run butonuna basıldı ve adımlar yüklendi", steps);
+        console.log(`Scenario Name: ${test.name}`);
+        this.router.navigate(['/report']);
+      },
+      error => {
+        console.error('Error fetching steps', error);
+      }
+    );
   }
 
   openDialog(): void {
@@ -106,7 +126,7 @@ export class TestControlComponent implements OnInit, OnChanges {
   }
 
   updateScenario(updatedScenario: Test): void {
-    const sub = this.scenarioService.updateScenario(updatedScenario).subscribe(
+    const sub = this.scenarioService.updateScenario(updatedScenario.id, updatedScenario).subscribe(
       response => {
         const index = this.data.findIndex(item => item.data.id === updatedScenario.id);
         if (index !== -1) {
@@ -121,4 +141,21 @@ export class TestControlComponent implements OnInit, OnChanges {
     );
     this.subscriptions.add(sub);
   }
+
+  deleteTest(test: Test): void {
+    event.stopPropagation();
+    //this.scenarioService.deleteStep(test.id, test.id ).subscribe();
+    this.scenarioService.deleteScenario(test.id).subscribe(
+      () => {
+        this.data = this.data.filter(item => item.data.id !== test.id);
+        this.dataSource.data = this.data;
+      },
+      error => {
+        console.error('Error deleting scenario', error);
+      }
+    );
+  }
+
+
+
 }
