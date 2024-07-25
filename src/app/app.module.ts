@@ -37,6 +37,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select'; // Bu satırı ekleyin
 import { MatRadioModule } from '@angular/material/radio';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth.guard';
@@ -95,6 +96,7 @@ export function tokenGetter() {
     NgxChartsModule,
     MatDividerModule,
     MatCheckboxModule,
+    MatSelectModule, // Bu satırı ekleyin
     MatRadioModule,
     MatSnackBarModule,
     JwtModule.forRoot({

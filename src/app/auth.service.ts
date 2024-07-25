@@ -127,6 +127,14 @@ export class AuthService {
     return this.userPermissions[permission] || false;
   }
 
+  isSuperUser(): boolean {
+    return this.currentUser.is_superuser || false;
+  }
+
+  isStaff(): boolean {
+    return this.currentUser.is_staff || false;
+  }
+
   private clearAuthState(): void {
     if (this.isBrowser()) {
       localStorage.removeItem('loggedIn');

@@ -11,7 +11,6 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getUsers(): Observable<any> {
-    console.log(`${this.apiUrl}/users/`);
     return this.http.get<any>(`${this.apiUrl}/users/`);
   }
 
@@ -25,5 +24,9 @@ export class UserService {
 
   getUserPermissions(userId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/users/${userId}/permissions/`);
+  }
+
+  deleteUser(userId: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/users/${userId}/`);
   }
 }
