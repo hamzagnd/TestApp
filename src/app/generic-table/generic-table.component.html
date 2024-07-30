@@ -1,5 +1,5 @@
 <div>
-    <div *ngIf="showExportButton">
+  <div *ngIf="showExportButton">
     <button mat-raised-button color="accent" (click)="exportToPDF()">Export to PDF</button>
   </div>
 
@@ -15,7 +15,6 @@
   </mat-form-field>
   <button mat-raised-button color="primary" (click)="addData()">Add</button>
 </div>
-
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   <ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column.key">
@@ -44,3 +43,8 @@
 </table>
 
 <mat-paginator [pageSize]="5" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+
+<!-- Hata mesajını göstermek için -->
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>

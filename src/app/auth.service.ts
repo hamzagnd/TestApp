@@ -80,19 +80,26 @@ export class AuthService {
             localStorage.setItem('userPermissions', JSON.stringify(response.permissions));
             localStorage.setItem('access_token', response.access);
           }
-          this.router.navigate(['/test']);  // Redirect to test page after login
+          this.router.navigate(['/test']).then(() => {
+            window.location.reload();  // Redirect to test page and refresh the page
+          });
         }
       }),
-      catchError(this.handleError<any>('login', null))
+      catchError(error => {
+        console.error('Login error:', error);
+        if (error.status === 400 && error.error) {
+          console.error('Error details:', error.error);
+        }
+        return of(null);
+      })
     );
   }
 
   logout(): void {
-    this.loggedIn = false;
-    this.currentUser = {};
-    this.userPermissions = {};
     this.clearAuthState();
-    this.router.navigate(['/login']);
+    this.router.navigateByUrl('/login').then(() => {
+      window.location.reload();
+    });
   }
 
   isLoggedIn(): boolean {
@@ -108,19 +115,19 @@ export class AuthService {
   }
 
   canEditUser(): boolean {
-    return this.userPermissions.canEditUser || false;
+    return this.userPermissions.can_edit_user || this.currentUser.is_superuser || false;
   }
 
   canDeleteUser(): boolean {
-    return this.userPermissions.canDeleteUser || false;
+    return this.userPermissions.can_delete_user || this.currentUser.is_superuser || false;
   }
 
   canEditScenario(): boolean {
-    return this.userPermissions.canEditScenario || false;
+    return this.userPermissions.can_edit_scenario || this.currentUser.is_superuser || false;
   }
 
   canDeleteScenario(): boolean {
-    return this.userPermissions.canDeleteScenario || false;
+    return this.userPermissions.can_delete_scenario || this.currentUser.is_superuser || false;
   }
 
   hasPermission(permission: string): boolean {

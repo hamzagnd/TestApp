@@ -1,13 +1,14 @@
-import {Component, EventEmitter, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {ScenarioService} from '../scenario.service';
-import {TableData} from '../models/table-data.model';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {ScenarioStepperComponent} from '../scenario-stepper/scenario-stepper.component';
-import {Subscription} from 'rxjs';
-import {ColumnDefinition, ColumnType} from '../column';
-import {Router} from '@angular/router';
-import {ReportService} from '../report.service';
+import { Component, EventEmitter, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { ScenarioService } from '../scenario.service';
+import { TableData } from '../models/table-data.model';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ScenarioStepperComponent } from '../scenario-stepper/scenario-stepper.component';
+import { Subscription } from 'rxjs';
+import { ColumnDefinition, ColumnType } from '../column';
+import { Router } from '@angular/router';
+import { ReportService } from '../report.service';
+import { AuthService } from '../auth.service';  
 
 interface Test {
   id: number;
@@ -45,22 +46,23 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
 
   displayedColumnKeys: string[] = [];
   reportDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  errorMessage: string = '';
 
   constructor(
     private scenarioService: ScenarioService,
     private reportService: ReportService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private authService: AuthService  
   ) {}
 
   ngOnInit(): void {
     this.getScenarios();
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['columns']) {
-      this.displayedColumnKeys = this.columns.map(c => c.key).concat('run');
+      this.displayedColumnKeys = this.columns.map(c => c.key).concat('run', 'delete');
     }
   }
 
@@ -82,20 +84,16 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onRowClick(test: Test): void {
-
     this.selectedTest = test;
     this.openDialog();
   }
 
   runTest(test: Test): void {
     event.stopPropagation();
-    console.log(test.id);
-
     this.scenarioService.getScenario(test.id).subscribe(
       scenario => {
         const steps = scenario.steps;
         const reportData = steps.map(step => new TableData<Test>(step));
-        console.log(steps);
         this.reportDataSource.data = reportData;
         this.reportService.setData(reportData);
         this.reportService.setScenarioName(test.name);
@@ -111,19 +109,24 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-
   openDialog(): void {
-    const dialogRef = this.dialog.open(ScenarioStepperComponent, {
-      width: '600px',
-      data: { scenario: this.selectedTest }
-    });
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser.is_superuser || currentUser.is_staff) {
+      const dialogRef = this.dialog.open(ScenarioStepperComponent, {
+        width: '80vw',  // Genişliği artırarak pencerenin yatay olmasını sağlıyoruz
+        maxWidth: '80vw',  // Maksimum genişliği ayarlayarak pencerenin ekrana sığmasını sağlıyoruz
+        data: { scenario: this.selectedTest }
+      });
 
-    const sub = dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.updateScenario(result);
-      }
-    });
-    this.subscriptions.add(sub);
+      const sub = dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.updateScenario(result);
+        }
+      });
+      this.subscriptions.add(sub);
+    } else {
+      this.errorMessage = 'You do not have permission to add or edit scenarios.';
+    }
   }
 
   closeStepper(): void {
@@ -149,18 +152,20 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
 
   deleteTest(test: Test): void {
     event.stopPropagation();
-    //this.scenarioService.deleteStep(test.id, test.id ).subscribe();
-    this.scenarioService.deleteScenario(test.id).subscribe(
-      () => {
-        this.data = this.data.filter(item => item.data.id !== test.id);
-        this.dataSource.data = this.data;
-      },
-      error => {
-        console.error('Error deleting scenario', error);
+    if (this.authService.getCurrentUser().is_superuser || this.authService.getCurrentUser().is_staff) {
+      if (confirm(`Are you sure you want to delete scenario ${test.name}?`)) {
+        this.scenarioService.deleteScenario(test.id).subscribe(
+          () => {
+            this.data = this.data.filter(item => item.data.id !== test.id);
+            this.dataSource.data = this.data;
+          },
+          error => {
+            console.error('Error deleting scenario', error);
+          }
+        );
       }
-    );
+    } else {
+      alert('You do not have permission to delete this scenario');
+    }
   }
-
-
-
 }
