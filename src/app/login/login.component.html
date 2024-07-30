@@ -11,8 +11,13 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Password</mat-label>
-        <input matInput formControlName="password" type="password" required>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required>
+        <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
       </mat-form-field>
+
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 
       <div class="form-actions">
         <button mat-raised-button color="primary" type="submit">Login</button>

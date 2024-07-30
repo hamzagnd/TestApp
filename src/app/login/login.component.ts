@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  hidePassword: boolean = true; // Şifreyi gizle/göster için değişken
+  errorMessage: string = ''; // Hata mesajı için değişken
 
   constructor(
     private fb: FormBuilder,
@@ -29,15 +31,24 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe(
         response => {
           if (response && response.message === 'Login successful') {
-            this.router.navigate(['/test']);  // Navigate to test page after successful login
+            this.router.navigate(['/test']);  // Başarılı girişten sonra test sayfasına yönlendir
           } else {
+            this.errorMessage = 'Login failed';
             console.error('Login failed');
           }
         },
         error => {
+          this.errorMessage = 'Kullanıcı bilginiz veya şifreniz hatalı, tekrar deneyiniz.';
           console.error('Login error:', error);
         }
       );
+    } else {
+      this.errorMessage = 'Form is invalid';
+      console.error('Form is invalid');
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
   }
 }

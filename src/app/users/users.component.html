@@ -2,37 +2,37 @@
   <mat-card class="users-card">
     <mat-card-header>
       <mat-card-title>Users</mat-card-title>
-      <button mat-raised-button color="primary" (click)="openAddUserDialog()">Add User</button>
+      <button mat-raised-button color="primary" (click)="openAddUserDialog()" *ngIf="authService.isSuperUser()">Add User</button>
     </mat-card-header>
     <mat-card-content>
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 full-width-table">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table">
         <!-- Username Column -->
         <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef> Username </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Username </th>
           <td mat-cell *matCellDef="let user"> {{user.username}} </td>
         </ng-container>
 
         <!-- Email Column -->
         <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef> Email </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
           <td mat-cell *matCellDef="let user"> {{user.email}} </td>
         </ng-container>
 
         <!-- First Name Column -->
         <ng-container matColumnDef="first_name">
-          <th mat-header-cell *matHeaderCellDef> First Name </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
           <td mat-cell *matCellDef="let user"> {{user.first_name}} </td>
         </ng-container>
 
         <!-- Last Name Column -->
         <ng-container matColumnDef="last_name">
-          <th mat-header-cell *matHeaderCellDef> Last Name </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
           <td mat-cell *matCellDef="let user"> {{user.last_name}} </td>
         </ng-container>
 
         <!-- Status Column -->
         <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
           <td mat-cell *matCellDef="let user"> 
             {{ user.is_superuser ? 'Superuser' : (user.is_staff ? 'Staff' : 'Active') }}
           </td>
@@ -40,7 +40,7 @@
 
         <!-- Permissions Column -->
         <ng-container matColumnDef="permissions">
-          <th mat-header-cell *matHeaderCellDef> Permissions </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Permissions </th>
           <td mat-cell *matCellDef="let user">
             <mat-icon *ngIf="user.can_edit_user" color="primary">check_circle</mat-icon>
             <mat-icon *ngIf="!user.can_edit_user" color="warn">cancel</mat-icon>
@@ -61,14 +61,23 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef> Actions </th>
           <td mat-cell *matCellDef="let user">
-            <button mat-button color="accent" (click)="openPermissionsModal(user)">Grant Permission</button>
-            <button mat-button color="warn" *ngIf="canDeleteUser(user)" (click)="deleteUser(user)">Delete</button>
+            <button mat-button color="accent" (click)="openPermissionsModal(user)" *ngIf="canEditPermissions(user) && user.id !== authService.getCurrentUser().id">Grant Permission</button>
+            <button mat-button color="warn" (click)="deleteUser(user)" *ngIf="canDeleteUser(user)">Delete</button>
+            <button mat-stroked-button color="primary" (click)="openEditUserDialog(user)" *ngIf="user.id === authService.getCurrentUser().id">
+              <mat-icon>edit</mat-icon>
+              Edit Account Information
+            </button>
+            <button mat-stroked-button color="primary" (click)="openChangePasswordDialog(user)" *ngIf="user.id === authService.getCurrentUser().id">
+              <mat-icon>lock</mat-icon>
+              Change Password
+            </button>
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </mat-card-content>
   </mat-card>
 </div>

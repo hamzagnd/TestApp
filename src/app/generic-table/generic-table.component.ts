@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TableData } from '../models/table-data.model';
 import { ScenarioService } from '../scenario.service';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
@@ -10,7 +11,8 @@ import { ColumnDefinition, ColumnType } from '../column';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
-import {Router} from "@angular/router";
+import { Router } from "@angular/router";
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-generic-table',
@@ -25,7 +27,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   @Input() showRefreshButton: boolean = false;
 
   newData: Partial<T> = {};
-
+  errorMessage: string = '';
 
   @Output() rowClick = new EventEmitter<T>();
   @Output() runTestClick = new EventEmitter<T>();
@@ -42,15 +44,22 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 20];
   displayedColumnKeys: string[] = [];
-  columnTemplateMap = new Map<string, TemplateRef<any>>();  //@Input() customColumnTemplate!: TemplateRef<any>;
+  columnTemplateMap = new Map<string, TemplateRef<any>>();
 
-  constructor(private scenarioService: ScenarioService,private router: Router, public dialog: MatDialog) {}
+  constructor(
+    private scenarioService: ScenarioService,
+    private router: Router,
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngAfterContentInit() {
     this.columnTemplates.forEach(template => {
       this.columnTemplateMap.set(template.columnName, template.templateRef);
     });
   }
+
   getTemplateForColumn(columnKey: string): TemplateRef<any> | null {
     return this.columnTemplateMap.get(columnKey) || null;
   }
@@ -86,20 +95,24 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     );
   }
 
-
   addData() {
-    const dataCopy: T = { ...this.newData } as T;
-    this.scenarioService.addScenario(dataCopy).subscribe(
-      response => {
-        this.dataSource.data.push(new TableData(dataCopy));
-        this.dataSource.data = [...this.dataSource.data];
-        this.newData = {};
-        this.length = this.dataSource.data.length;
-      },
-      error => {
-        console.error('Error adding scenario', error);
-      }
-    );
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser.is_superuser || currentUser.is_staff) {
+      const dataCopy: T = { ...this.newData } as T;
+      this.scenarioService.addScenario(dataCopy).subscribe(
+        response => {
+          this.dataSource.data.push(new TableData(dataCopy));
+          this.dataSource.data = [...this.dataSource.data];
+          this.newData = {};
+          this.length = this.dataSource.data.length;
+        },
+        error => {
+          console.error('Error adding scenario', error);
+        }
+      );
+    } else {
+      this.errorMessage = 'You do not have permission to add scenarios.';
+    }
   }
 
   exportToPDF() {
@@ -126,34 +139,60 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   }
 
   editRow(row: TableData<T>) {
-    const dialogRef = this.dialog.open(EditDialogComponent, {
-      width: '250px',
-      data: { row: { ...row.data }, displayedColumns: this.columns.map(c => c.key) }
-    });
+    if (this.authService.canEditScenario()) {
+      const dialogRef = this.dialog.open(EditDialogComponent, {
+        width: '250px',
+        data: { row: { ...row.data }, displayedColumns: this.columns.map(c => c.key) }
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('Result:', result);
-        const index = this.dataSource.data.findIndex(d => d.data.id === row.data.id);
-        if (index !== -1) {
-          this.scenarioService.updateScenario(row.data.id, result).subscribe(
-            response => {
-              console.log('edited successfully', response);
-            },
-            error => {
-              console.error('Error editing scenario', error);
-            }
-          );
-          this.dataSource.data[index] = new TableData<T>(result);
-          this.dataSource.data = [...this.dataSource.data];
-        } else {
-          console.error('Row not found in dataSource');
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          console.log('Result:', result);
+          const index = this.dataSource.data.findIndex(d => d.data.id === row.data.id);
+          if (index !== -1) {
+            this.scenarioService.updateScenario(row.data.id, result).subscribe(
+              response => {
+                console.log('edited successfully', response);
+                this.dataSource.data[index] = new TableData<T>(result);
+                this.dataSource.data = [...this.dataSource.data];
+              },
+              error => {
+                console.error('Error editing scenario', error);
+              }
+            );
+          } else {
+            console.error('Row not found in dataSource');
+          }
         }
-      }
-    });
+      });
+    } else {
+      this.snackBar.open('You do not have permission to edit this scenario', 'Close', {
+        duration: 3000,
+      });
+      console.error('You do not have permission to edit this scenario');
+    }
   }
 
-
+  deleteRow(row: TableData<T>) {
+    if (this.authService.canDeleteScenario()) {
+      if (confirm(`Are you sure you want to delete this scenario?`)) {
+        this.scenarioService.deleteScenario(row.data.id).subscribe(
+          response => {
+            console.log('deleted successfully', response);
+            this.dataSource.data = this.dataSource.data.filter(d => d.data.id !== row.data.id);
+          },
+          error => {
+            console.error('Error deleting scenario', error);
+          }
+        );
+      }
+    } else {
+      this.snackBar.open('You do not have permission to delete this scenario', 'Close', {
+        duration: 3000,
+      });
+      console.error('You do not have permission to delete this scenario');
+    }
+  }
 
   getStateClass(state: string): string {
     if (state === 'geçti') {
@@ -168,7 +207,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   }
 
   refreshTable(): void {
-    //this.getScenarios();
+    this.fetchScenarios();
   }
-
 }
