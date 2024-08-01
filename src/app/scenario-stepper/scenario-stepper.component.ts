@@ -53,9 +53,6 @@ export class ScenarioStepperComponent implements OnInit {
   loadSteps(): void {
     this.scenarioService.getScenario(this.scenario.id).subscribe(scenario => {
       this.steps = scenario.steps;
-      console.log(this.scenario.id);
-      console.log("deneme");
-      console.log(this.steps);
       this.updatePaginatedSteps();
     }, error => {
       console.error('Error loading steps:', error);

@@ -1,17 +1,24 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import { TableData } from '../models/table-data.model';
-import { MatTableDataSource } from '@angular/material/table';
-import { ColumnDefinition } from '../column';
-import { Step, Test } from '../test-control/test';
-import { ReportService } from '../report.service';
-import { ScenarioService } from "../scenario.service";
+import {TableData} from '../models/table-data.model';
+import {MatTableDataSource} from '@angular/material/table';
+import {ColumnDefinition, ColumnType} from '../column';
+import {Test} from '../test-control/test';
+import {ReportService} from '../report.service';
+import {ScenarioService} from "../scenario.service";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-report-table',
   templateUrl: './report-table.component.html',
   styleUrls: ['./report-table.component.css'],
-  encapsulation: ViewEncapsulation.None
-
+  encapsulation: ViewEncapsulation.None,
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class ReportTableComponent implements OnInit {
 
@@ -19,17 +26,20 @@ export class ReportTableComponent implements OnInit {
     new ColumnDefinition('step_name', 'Name'),
     new ColumnDefinition('step_procedure', 'Kategori'),
     new ColumnDefinition('step_criteria', 'State'),
-    new ColumnDefinition('action', 'Action')
+    new ColumnDefinition('action', 'Action'),
+    new ColumnDefinition('expand', 'Expand')
   ];
 
   data: TableData<Test>[] = [];
   dataSource: MatTableDataSource<TableData<Test>>;
+  expandedElement: Test | null;
 
   public donutChartData: any[] = [];
   public donutChartLabels: string[] = ['Geçti', 'Kaldı', 'Test Edilmedi'];
   public scenarioName: string = '';
   public runDate: Date | null = null;
-
+  scenarioId: number | null = null;
+  changes: any[] = [];
 
   constructor(private reportService: ReportService, private scenarioService: ScenarioService) {
   }
@@ -44,8 +54,7 @@ export class ReportTableComponent implements OnInit {
   }
 
   onRowClick(test: Test) {
-    //console.log('Row clicked:', test);
-
+    // console.log('Row clicked:', test);
   }
 
   updateDonutChartData() {
@@ -61,8 +70,31 @@ export class ReportTableComponent implements OnInit {
   }
 
   onCriteriaChange(step: any, criteria: string) {
-    console.log(step.data.id, criteria, step.data);
     this.reportService.updateSuccessCriteria(step.data.id, criteria);
-    this.updateDonutChartData();
+    this.scenarioId = step.data.scenario;
+    const updatedStep = { ...step.data, step_criteria: criteria };
+    this.changes.push(updatedStep);
+    console.log(step.data);
+    console.log(this.reportService.getData());
+  }
+
+  submit() {
+    console.log(this.scenarioId);
+    if (this.scenarioId !== null) {
+      this.changes.forEach(change => {
+        this.scenarioService.updateStep(this.scenarioId, change).subscribe(
+          response => {
+            console.log(`Step ${change.id} updated successfully`, response);
+          },
+          error => {
+            console.error(`Error updating step ${change.id}`, error);
+          }
+        );
+      });
+      this.changes = [];
+      this.updateDonutChartData();
+    } else {
+      console.error('Scenario ID is null');
+    }
   }
 }

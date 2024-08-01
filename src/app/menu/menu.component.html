@@ -1,17 +1,18 @@
 <mat-toolbar color="primary" class="example-toolbar">
   <button mat-icon-button (click)="toggleSidenav()"><mat-icon>menu</mat-icon></button>
   <h1 class="example-app-name">Menu</h1>
-  <button mat-button (click)="logout()">Logout</button>
+  <span class="spacer"></span>
+  <button mat-button (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
 </mat-toolbar>
-<mat-sidenav-container class="example-container" autosize>
-  <mat-sidenav #sidenav class="example-sidenav" mode="side" [opened]="isExpanded" (mouseenter)="mouseenter()" (mouseleave)="mouseleave()">
+
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav class="example-sidenav" mode="side" [opened]="true">
     <mat-nav-list>
-      <mat-list-item (click)="showSubmenu = !showSubmenu" class="parent">
+      <mat-list-item class="parent">
         <mat-icon mat-list-icon>home</mat-icon>
-        <span class="full-width" *ngIf="isExpanded || isShowing">Ana Menü</span>
-        <mat-icon class="menu-button" [ngClass]="{'rotated' : showSubmenu}" *ngIf="isExpanded || isShowing">expand_more</mat-icon>
+        <span class="full-width">Ana Menü</span>
       </mat-list-item>
-      <div class="submenu" [ngClass]="{'expanded' : showSubmenu}" *ngIf="isShowing || isExpanded">
+      <div class="submenu">
         <a mat-list-item routerLink="/test">Test</a>
         <a mat-list-item routerLink="/report">Report</a>
         <a mat-list-item routerLink="/users">Users</a>

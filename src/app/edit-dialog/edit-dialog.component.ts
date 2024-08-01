@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {ColumnType} from "../column";
 
 @Component({
   selector: 'app-edit-dialog',
@@ -19,4 +20,6 @@ export class EditDialogComponent {
   onCancel(): void {
     this.dialogRef.close();
   }
+
+  protected readonly ColumnType = ColumnType;
 }

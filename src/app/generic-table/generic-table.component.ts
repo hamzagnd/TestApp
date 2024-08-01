@@ -1,6 +1,19 @@
-import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit, OnChanges, SimpleChanges, TemplateRef, QueryList, ContentChildren } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  OnInit,
+  ViewChild,
+  EventEmitter,
+  AfterViewInit,
+  OnChanges,
+  SimpleChanges,
+  TemplateRef,
+  QueryList,
+  ContentChildren
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,6 +27,7 @@ import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
 import { Router } from "@angular/router";
 import { AuthService } from '../auth.service';
 
+
 @Component({
   selector: 'app-generic-table',
   templateUrl: './generic-table.component.html',
@@ -25,17 +39,20 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   @Input() showAddDataForm: boolean = false;
   @Input() showExportButton: boolean = false;
   @Input() showRefreshButton: boolean = false;
+  @Input() showFilter: boolean = false;
+  @Input() showExpand: boolean = false;
+  @Input() showSummit: boolean = false;
 
   newData: Partial<T> = {};
+
   errorMessage: string = '';
+
 
   @Output() rowClick = new EventEmitter<T>();
   @Output() runTestClick = new EventEmitter<T>();
 
   @ContentChildren(ColumnTemplateDirective) columnTemplates: QueryList<ColumnTemplateDirective>;
 
-  @ViewChild('addDataTemplate') addDataTemplate: TemplateRef<any>;
-  @ViewChild('exportTemplate') exportTemplate: TemplateRef<any>;
   @ViewChild('customColumn') customColumnTemplate: TemplateRef<T>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -45,6 +62,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   pageSizeOptions: number[] = [5, 10, 20];
   displayedColumnKeys: string[] = [];
   columnTemplateMap = new Map<string, TemplateRef<any>>();
+  expandedElement: T | null;
 
   constructor(
     private scenarioService: ScenarioService,
@@ -75,6 +93,13 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     } else {
       console.error('Paginator or Sort is undefined');
     }
+
+    // Custom filter predicate
+    this.dataSource.filterPredicate = (data: TableData<T>, filter: string) => {
+      const transformedFilter = filter.trim().toLowerCase();
+      return Object.values(data.data).some(value =>
+        value !== null && value !== undefined && value.toString().toLowerCase().includes(transformedFilter));
+    };
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -194,6 +219,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     }
   }
 
+
   getStateClass(state: string): string {
     if (state === 'geçti') {
       return 'passed-state';
@@ -207,6 +233,18 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   }
 
   refreshTable(): void {
-    this.fetchScenarios();
+    this.scenarioService.getScenarios();
+    window.location.reload();
   }
-}
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    console.log(this.dataSource.filter);
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  protected readonly ColumnType = ColumnType;
+
