@@ -36,12 +36,12 @@ import { UsersComponent } from './users/users.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-import { ViewEncapsulation } from '@angular/core'; // import statement
+import { ViewEncapsulation } from '@angular/core'; 
 
 
 import { UserPermissionsComponent } from './user-permissions/user-permissions.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select'; // Bu satırı ekleyin
+import { MatSelectModule } from '@angular/material/select'; 
 import { MatRadioModule } from '@angular/material/radio';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth.guard';
@@ -52,6 +52,8 @@ import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { UserEditComponent } from './user-edit/user-edit.component';
+import { UserChangePasswordComponent } from './user-change-password/user-change-password.component';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -71,6 +73,8 @@ export function tokenGetter() {
     LoginComponent,
     EditDialogComponent,
     ConfirmDialogComponent,
+    UserEditComponent,
+    UserChangePasswordComponent,
 
 
 
@@ -107,7 +111,7 @@ export function tokenGetter() {
     NgxChartsModule,
     MatDividerModule,
     MatCheckboxModule,
-    MatSelectModule, // Bu satırı ekleyin
+    MatSelectModule, 
     MatRadioModule,
     MatSnackBarModule,
 

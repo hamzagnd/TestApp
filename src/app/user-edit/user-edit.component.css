@@ -1,0 +1,30 @@
+/* Mat-form-field genişliği ve dolgu ayarları */
+mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  /* Mat-dialog-content ve genel içeriğin genişliği ve dolgu ayarları */
+  mat-dialog-content {
+    padding: 24px;
+  }
+  
+  /* Mat-dialog-actions düğmelerinin hizalaması ve dolgu ayarları */
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px;
+  }
+  
+  /* Mat-input'un font büyüklüğünü ve dolgu ayarları */
+  mat-input {
+    font-size: 16px;
+    padding: 8px;
+  }
+  
+  /* Genel buton stilini ayarlamak için */
+  button {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+  

@@ -30,24 +30,17 @@ export class UserPermissionsComponent implements OnInit {
   ngOnInit(): void {
     this.permissionsForm = this.fb.group({
       status: [this.user.is_superuser ? 'superuser' : (this.user.is_staff ? 'staff' : 'active')],
-      canEditUser: [this.user.can_edit_user],
-      canDeleteUser: [this.user.can_delete_user],
-      canEditScenario: [this.user.can_edit_scenario],
-      canDeleteScenario: [this.user.can_delete_scenario]
+      canEditUser: [{ value: this.user.can_edit_user, disabled: true }],
+      canDeleteUser: [{ value: this.user.can_delete_user, disabled: true }],
+      canEditScenario: [{ value: this.user.can_edit_scenario, disabled: true }],
+      canDeleteScenario: [{ value: this.user.can_delete_scenario, disabled: true }]
     });
     this.onStatusChange();
   }
 
   onStatusChange(): void {
     const status = this.permissionsForm.value.status;
-    if (status === 'superuser') {
-      this.permissionsForm.patchValue({
-        canEditUser: true,
-        canDeleteUser: true,
-        canEditScenario: true,
-        canDeleteScenario: true
-      });
-    } else if (status === 'staff') {
+    if (status === 'staff') {
       this.permissionsForm.patchValue({
         canEditUser: false,
         canDeleteUser: false,

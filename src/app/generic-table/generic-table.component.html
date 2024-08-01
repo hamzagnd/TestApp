@@ -1,6 +1,7 @@
 <div class="button-container">
   <div *ngIf="showExportButton">
     <button mat-raised-button color="accent" (click)="exportToPDF()"> <mat-icon>save_alt</mat-icon> Export to PDF</button>
+
   </div>
 
   <div *ngIf="showRefreshButton">
@@ -64,3 +65,8 @@
 </table>
 
 <mat-paginator [pageSize]="5" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+
+<!-- Hata mesajını göstermek için -->
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>
