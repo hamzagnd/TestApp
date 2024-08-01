@@ -89,20 +89,18 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
 
   runTest(test: Test): void {
     event.stopPropagation();
-    console.log(test.id);
 
     this.scenarioService.getScenario(test.id).subscribe(
       scenario => {
         const steps = scenario.steps;
         const reportData = steps.map(step => new TableData<Test>(step));
-        console.log(steps);
+        //console.log(steps);
         this.reportDataSource.data = reportData;
         this.reportService.setData(reportData);
         this.reportService.setScenarioName(test.name);
         this.reportService.setRunDate(new Date());
 
         console.log("Run butonuna basıldı ve adımlar yüklendi", steps);
-        console.log(`Scenario Name: ${test.name}`);
         this.router.navigate(['/report']);
       },
       error => {

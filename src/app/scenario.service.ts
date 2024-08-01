@@ -22,10 +22,10 @@ export class ScenarioService {
     return this.http.post(this.apiUrl, scenario);
   }
 
-
   updateScenario(id: number, data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}${id}/`, data);
   }
+
   deleteScenario(scenarioId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}${scenarioId}/`);
   }
@@ -39,9 +39,13 @@ export class ScenarioService {
   }
 
   updateStep(scenarioId: number, step: any): Observable<any> {
-    //console.log(`${this.apiUrl}${scenarioId}/steps/${step.id}/`, { ...step, scenario: scenarioId });
     return this.http.put(`${this.apiUrl}${scenarioId}/steps/${step.id}/`, { ...step, scenario: scenarioId });
   }
+
+  updateSteps(scenarioId: number, stepId: number, step: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}${scenarioId}/steps/${stepId}/`, { ...step, scenario: scenarioId });
+  }
+
 
   deleteStep(scenarioId: number, stepId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}${scenarioId}/steps/${stepId}/`);

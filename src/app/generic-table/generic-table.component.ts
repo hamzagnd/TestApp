@@ -1,6 +1,19 @@
-import { Component, Input, Output, OnInit, ViewChild, EventEmitter, AfterViewInit, OnChanges, SimpleChanges, TemplateRef, QueryList, ContentChildren } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  OnInit,
+  ViewChild,
+  EventEmitter,
+  AfterViewInit,
+  OnChanges,
+  SimpleChanges,
+  TemplateRef,
+  QueryList,
+  ContentChildren
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TableData } from '../models/table-data.model';
@@ -10,7 +23,7 @@ import { ColumnDefinition, ColumnType } from '../column';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
-import {Router} from "@angular/router";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-generic-table',
@@ -23,17 +36,17 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   @Input() showAddDataForm: boolean = false;
   @Input() showExportButton: boolean = false;
   @Input() showRefreshButton: boolean = false;
+  @Input() showFilter: boolean = false;
+  @Input() showExpand: boolean = false;
+  @Input() showSummit: boolean = false;
 
   newData: Partial<T> = {};
-
 
   @Output() rowClick = new EventEmitter<T>();
   @Output() runTestClick = new EventEmitter<T>();
 
   @ContentChildren(ColumnTemplateDirective) columnTemplates: QueryList<ColumnTemplateDirective>;
 
-  @ViewChild('addDataTemplate') addDataTemplate: TemplateRef<any>;
-  @ViewChild('exportTemplate') exportTemplate: TemplateRef<any>;
   @ViewChild('customColumn') customColumnTemplate: TemplateRef<T>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -42,15 +55,17 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 20];
   displayedColumnKeys: string[] = [];
-  columnTemplateMap = new Map<string, TemplateRef<any>>();  //@Input() customColumnTemplate!: TemplateRef<any>;
+  columnTemplateMap = new Map<string, TemplateRef<any>>();
+  expandedElement: T | null;
 
-  constructor(private scenarioService: ScenarioService,private router: Router, public dialog: MatDialog) {}
+  constructor(private scenarioService: ScenarioService, private router: Router, public dialog: MatDialog) {}
 
   ngAfterContentInit() {
     this.columnTemplates.forEach(template => {
       this.columnTemplateMap.set(template.columnName, template.templateRef);
     });
   }
+
   getTemplateForColumn(columnKey: string): TemplateRef<any> | null {
     return this.columnTemplateMap.get(columnKey) || null;
   }
@@ -66,6 +81,13 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     } else {
       console.error('Paginator or Sort is undefined');
     }
+
+    // Custom filter predicate
+    this.dataSource.filterPredicate = (data: TableData<T>, filter: string) => {
+      const transformedFilter = filter.trim().toLowerCase();
+      return Object.values(data.data).some(value =>
+        value !== null && value !== undefined && value.toString().toLowerCase().includes(transformedFilter));
+    };
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -85,7 +107,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
       }
     );
   }
-
 
   addData() {
     const dataCopy: T = { ...this.newData } as T;
@@ -153,8 +174,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     });
   }
 
-
-
   getStateClass(state: string): string {
     if (state === 'geçti') {
       return 'passed-state';
@@ -168,7 +187,18 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   }
 
   refreshTable(): void {
-    //this.getScenarios();
+    this.scenarioService.getScenarios();
+    window.location.reload();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    console.log(this.dataSource.filter);
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  protected readonly ColumnType = ColumnType;
 }

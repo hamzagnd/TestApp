@@ -1,19 +1,27 @@
-<div class="scenario-name">
-  <h2>{{ scenarioName }} testine {{ runDate ? (runDate | date:'yyyy-MM-dd') : 'N/A' }} tarihinde başlandı.</h2>
-
+<div class="button-container">
+  <div class="submit-button">
+    <button mat-raised-button color="accent" (click)="submit()">
+      <mat-icon>save</mat-icon> Submit
+    </button>
+  </div>
 </div>
 
-<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-  <mat-tab label="Tablo">
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" style="width: 100%; height: 100%;">
+  <mat-tab label="Tablo" style="width: 100%; height: 100%;">
     <div class="table-container">
-
-      <app-generic-table [columns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)">
+      <app-generic-table class="report-table" [columns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)">
         <ng-template tableColumnTemplate="action" let-element let-i="index">
           <mat-radio-group [(ngModel)]="element.data.step_criteria" (ngModelChange)="onCriteriaChange(element, $event)">
             <mat-radio-button value="geçti">Geçti</mat-radio-button>
             <mat-radio-button value="kaldı">Kaldı</mat-radio-button>
             <mat-radio-button value="Test Edilmedi">Test Edilmedi</mat-radio-button>
           </mat-radio-group>
+        </ng-template>
+
+        <ng-template tableColumnTemplate="expand" let-element>
+          <mat-icon (click)="expandedElement = expandedElement === element ? null : element">
+            {{ expandedElement === element ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
         </ng-template>
       </app-generic-table>
     </div>

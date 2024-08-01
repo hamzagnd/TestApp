@@ -1,9 +1,11 @@
 <h1 mat-dialog-title>Edit Row</h1>
 <div mat-dialog-content>
-  <mat-form-field appearance="fill" *ngFor="let column of data.displayedColumns">
-    <mat-label>{{ column }}</mat-label>
-    <input matInput [(ngModel)]="data.row[column]" placeholder="{{ column }}">
-  </mat-form-field>
+  <ng-container *ngFor="let column of data.displayedColumns" >
+    <mat-form-field appearance="fill" *ngIf="column.type !== ColumnType.CUSTOM ">
+      <mat-label>{{ column }}</mat-label>
+      <input matInput [(ngModel)]="data.row[column]" placeholder="{{ column }}">
+    </mat-form-field>
+  </ng-container>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>

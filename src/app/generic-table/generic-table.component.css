@@ -1,21 +1,18 @@
 :host {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 150%;
+  height: 150%;
+  text-align: left;
+
 }
 
-.mat-table {
-  width: 100%;
-  height: calc(100% - 64px);
-  overflow: auto;
-  text-align: center;
-  margin-bottom: 20px; /* Tablo ile diğer içerikler arasında boşluk */
-}
+
 
 .button-container {
   display: flex;
   gap: 10px; /* Butonlar arasındaki boşluk */
   margin-bottom: 20px; /* Buton ile diğer içerikler arasında boşluk */
+  justify-content: flex-start; /* Butonları sola hizalar */
 }
 
 .passed-state {
@@ -62,30 +59,3 @@
   margin-top: 20px; /* Paginatör ile üstündeki içerikler arasında boşluk */
 }
 
-/* Angular Material Override */
-::ng-deep .button-container {
-  display: flex !important;
-  gap: 10px !important;
-  margin-bottom: 20px !important;
-}
-
-::ng-deep .add-data-form {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 16px !important;
-  margin-bottom: 20px !important;
-}
-
-::ng-deep .add-data-form .form-field {
-  flex: 1 1 100% !important;
-  min-width: 250px !important;
-}
-
-::ng-deep .mat-table {
-  width: 100% !important;
-  margin-bottom: 20px !important;
-}
-
-::ng-deep .mat-paginator {
-  margin-top: 20px !important;
-}

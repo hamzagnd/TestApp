@@ -6,45 +6,65 @@
   color: red;
 }
 
-:host table {
+.table-container {
   width: 100%;
-}
-
-:host .mat-elevation-z8 {
-  margin-bottom: 20px;
-}
-
-:host .donut-chart-container {
+  height: 100%;
   display: flex;
+  flex-direction: column;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  height: 100%;
 }
 
-:host .donut-chart {
+.donut-chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.donut-chart {
   width: 800px;
-  height: 600px;
+  height: 800px;
 }
 
-:host .mat-tab-group {
-  margin-bottom: 20px; /* mat-tab-group ile aşağıdaki içerik arasındaki boşluk */
+.report-table {
+  width: 1300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Gölge ekleme */
+  border-radius: 8px; /* Hafif köşe yuvarlama */
+  overflow: hidden; /* Taşan içerikleri gizle */
+  background-color: #ffffff; /* Arka plan rengini beyaz yap */
 }
 
-:host .table-container {
-  margin-top: 20px; /* mat-tab-group ile tablonun üst kısmı arasındaki boşluk */
-}
-
-:host .scenario-info {
+.scenario-name {
   margin: 20px;
   padding: 10px;
-  font-family: Arial, sans-serif; /* Fontu daha düzgün ve okunabilir hale getirmek için */
-  font-size: 10px; /* Font boyutunu küçült */
-  color: #333; /* Metin rengini daha koyu yaparak okunabilirliği artır */
-  border: 1px solid #ddd; /* Hafif bir sınır ekleyerek görsel ayrım sağla */
-  border-radius: 4px; /* Köşeleri yuvarlat */
-  background-color: #f9f9f9; /* Arka plan rengini açık tut */
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
 }
 
-:host .scenario-info h2 {
-  margin: 0; /* Başlık etrafındaki varsayılan boşlukları kaldır */
-  font-size: 10px; /* Başlık için biraz daha büyük font boyutu */
+.scenario-name h2 {
+  margin: 0;
+  font-size: 50px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-start; /* Sol tarafa hizala */
+  width: 100%;
+  padding: 4px;
+}
+
+.submit-button {
+  margin-top: 10px;
 }
