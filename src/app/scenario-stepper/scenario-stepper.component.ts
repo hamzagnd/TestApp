@@ -40,15 +40,18 @@ export class ScenarioStepperComponent implements OnInit {
 
   ngOnInit(): void {
     this.stepForm = this.fb.group({
-      step_name: ['', Validators.required],
-      step_procedure: ['', Validators.required],
-      step_criteria: ['', Validators.required]
+      vtd_madde_no: ['', Validators.required],
+      testAdimlari: ['', Validators.required],
+      kabulKriteri: ['', Validators.required],
+      //durum: [''],
+      //yorum: ['']
     });
 
     if (this.scenario) {
       this.loadSteps();
     }
   }
+
 
   loadSteps(): void {
     this.scenarioService.getScenario(this.scenario.id).subscribe(scenario => {

@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   TemplateRef,
   QueryList,
-  ContentChildren
+  ContentChildren, ElementRef
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -26,7 +26,8 @@ import 'jspdf-autotable';
 import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
 import { Router } from "@angular/router";
 import { AuthService } from '../auth.service';
-
+import { ExcelService } from "../excelService";
+import html2canvas from "html2canvas";
 
 @Component({
   selector: 'app-generic-table',
@@ -47,6 +48,10 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
 
   errorMessage: string = '';
 
+  sheetNames: string[] = [];
+  selectedSheet: string = '';
+  file: File | null = null;
+  observedList: any[] = [];
 
   @Output() rowClick = new EventEmitter<T>();
   @Output() runTestClick = new EventEmitter<T>();
@@ -54,12 +59,14 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   @ContentChildren(ColumnTemplateDirective) columnTemplates: QueryList<ColumnTemplateDirective>;
 
   @ViewChild('customColumn') customColumnTemplate: TemplateRef<T>;
+  @ViewChild('tableContainer') tableContainer: ElementRef;
+  @ViewChild('donutChartContainer') donutChartContainer: ElementRef;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   length = 0;
   pageSize = 5;
-  pageSizeOptions: number[] = [5, 10, 20];
+  pageSizeOptions: number[] = [5, 10, 20, 30, 50, 100];
   displayedColumnKeys: string[] = [];
   columnTemplateMap = new Map<string, TemplateRef<any>>();
   expandedElement: T | null;
@@ -69,8 +76,9 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     private router: Router,
     public dialog: MatDialog,
     private authService: AuthService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private excelService: ExcelService
+  ) { }
 
   ngAfterContentInit() {
     this.columnTemplates.forEach(template => {
@@ -142,13 +150,37 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
 
   exportToPDF() {
     const doc = new jsPDF();
-    const columns = this.columns.map(column => ({ title: column.header, dataKey: column.key }));
+
+    // Tablo başlığı
+    doc.text('Scenario Report', 10, 10);
+
+    const columns = this.columns.map(col => ({ title: col.header, dataKey: col.key }));
+
+    // Senaryo veri satırları
     const rows = this.dataSource.data.map((row: TableData<T>) => {
-      const rowData: { [key: string]: any } = {};
-      this.columns.forEach(column => {
-        rowData[column.key] = row.data[column.key];
-      });
-      return rowData;
+      return this.columns.reduce((acc, col) => {
+        acc[col.key] = row.data[col.key];
+        return acc;
+      }, {} as { [key: string]: any });
+    });
+
+    // Her senaryonun geçti, kaldı ve test edilmedi adımlarını hesaplayın
+    const scenarioData = this.dataSource.data.map(row => {
+      const name = row.data['name'];
+      const geçti = this.dataSource.data.filter(item => item.data.name === name && item.data.durum === 'geçti').length;
+      const kaldı = this.dataSource.data.filter(item => item.data.name === name && item.data.durum === 'kaldı').length;
+      const testEdilmedi = this.dataSource.data.filter(item => item.data.name === name && item.data.durum === 'Test Edilmedi').length;
+      return { name, geçti, kaldı, testEdilmedi };
+    });
+
+    // Senaryo veri satırlarına geçti, kaldı ve test edilmedi sütunlarını ekleyin
+    rows.forEach(row => {
+      const scenario = scenarioData.find(s => s.name === row.name);
+      if (scenario) {
+        row['Geçti'] = scenario.geçti;
+        row['Kaldı'] = scenario.kaldı;
+        row['Test Edilmedi'] = scenario.testEdilmedi;
+      }
     });
 
     (doc as any).autoTable(columns, rows);
@@ -219,7 +251,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     }
   }
 
-
   getStateClass(state: string): string {
     if (state === 'geçti') {
       return 'passed-state';
@@ -248,3 +279,4 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
 
   protected readonly ColumnType = ColumnType;
 
+}

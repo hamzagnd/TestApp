@@ -1,29 +1,28 @@
 .mat-dialog-container {
   padding: 0;
-  margin: 0; /* Kenar boşluklarını kaldır */
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 100vw; /* Maksimum genişlik */
-  width: 100vw; /* Full width */
+  max-width: 100vw;
+  width: 100vw;
 }
 
 .stepper-card {
   padding: 20px;
-  margin: 0; /* Kenar boşluklarını kaldır */
-  background-color: #f5f5f5; /* Arka plan rengi */
+  margin: 0;
+  background-color: #f5f5f5;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  font-family: 'Roboto', sans-serif; /* Yazı fontu */
-  width: 100%; /* Full width */
-  max-height: 90vh; /* Maksimum yükseklik */
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Diğer stiller */
 .stepper-table-container {
-  flex: 1;
+  max-height: 400px;
   overflow-y: auto;
 }
 
@@ -34,7 +33,7 @@
 .stepper-form {
   display: flex;
   flex-direction: column;
-  width: 100%; /* Full width */
+  width: 100%;
 }
 
 .full-width {
@@ -50,42 +49,44 @@
 .stepper-card h2, .stepper-card h3 {
   margin-top: 0;
   font-weight: 500;
-  color: #3f51b5; /* Başlık rengi */
+  color: #3f51b5;
   text-align: center;
 }
 
 .stepper-card h2 {
-  font-size: 2.5rem; /* Başlık boyutu */
+  font-size: 2.5rem;
 }
 
 .stepper-card h3 {
-  font-size: 2rem; /* Alt başlık boyutu */
+  font-size: 2rem;
   margin-bottom: 20px;
 }
 
 .custom-table th, .custom-table td {
   padding: 10px;
   font-size: 1.2rem;
-  word-break: normal; /* Uzun kelimelerin taşmasını engelle */
-  white-space: nowrap; /* Satır kaymasını engelle */
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .header-cell {
   font-weight: bold;
-  color: #3f51b5; /* Başlıkların rengi */
-  font-size: 1.5rem; /* Başlıkların yazı boyutu */
-  border-bottom: 2px solid #e0e0e0; /* Başlıkların altına çizgi eklendi */
+  color: #3f51b5;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #e0e0e0;
+  white-space: nowrap;
 }
 
 .custom-table th {
-  background-color: #fafafa; /* Başlıkların arka plan rengi */
+  background-color: #fafafa;
 }
 
 .sticky-header {
   position: sticky;
   top: 0;
-  background-color: #f5f5f5; /* Arka plan rengi */
-  z-index: 2; /* Diğer öğelerin üstünde görünmesi için */
+  background-color: #f5f5f5;
+  z-index: 2;
 }
 
 mat-form-field {
@@ -95,23 +96,23 @@ mat-form-field {
 
 button {
   margin-top: 10px;
-  font-family: 'Roboto', sans-serif; /* Yazı fontu */
+  font-family: 'Roboto', sans-serif;
 }
 
 ::ng-deep .mat-horizontal-stepper-header .mat-step-label {
-  font-size: 1.5rem; /* Adım etiketlerinin boyutu */
-  font-weight: 500; /* Adım etiketlerinin kalınlığı */
-  color: #3f51b5; /* Adım etiketlerinin rengi */
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #3f51b5;
 }
 
 ::ng-deep .mat-horizontal-stepper-content {
   padding: 20px;
-  background-color: #ffffff; /* Adım içeriklerinin arka plan rengi */
-  border: 1px solid #e0e0e0; /* Adım içeriklerinin kenarlığı */
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   margin-top: 10px;
 }
 
 body {
-  font-family: 'Roboto', sans-serif; /* Yazı fontu */
+  font-family: 'Roboto', sans-serif;
 }

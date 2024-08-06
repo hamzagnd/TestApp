@@ -64,7 +64,7 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumnKeys"></tr>
 </table>
 
-<mat-paginator [pageSize]="5" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSize]="10" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 
 <!-- Hata mesajını göstermek için -->
 <div *ngIf="errorMessage" class="error-message">

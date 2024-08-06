@@ -26,7 +26,7 @@ export class ReportService {
 
   updateSuccessCriteria(index: number, criteria: string) {
     if (this.reportData[index]) {
-      this.reportData[index].data.step_criteria = criteria;
+      this.reportData[index].data.durum = criteria;
     }
   }
 

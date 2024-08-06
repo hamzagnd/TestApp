@@ -7,11 +7,11 @@
 </div>
 
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" style="width: 100%; height: 100%;">
-  <mat-tab label="Tablo" style="width: 100%; height: 100%;">
+  <mat-tab label="Tablo">
     <div class="table-container">
-      <app-generic-table class="report-table" [columns]="columns" [dataSource]="dataSource" (rowClick)="onRowClick($event)">
+      <app-generic-table class="report-table" [columns]="columns" [dataSource]="dataSource"  (rowClick)="onRowClick($event)">
         <ng-template tableColumnTemplate="action" let-element let-i="index">
-          <mat-radio-group [(ngModel)]="element.data.step_criteria" (ngModelChange)="onCriteriaChange(element, $event)">
+          <mat-radio-group [(ngModel)]="element.data.durum" (ngModelChange)="onCriteriaChange(element, $event)">
             <mat-radio-button value="geçti">Geçti</mat-radio-button>
             <mat-radio-button value="kaldı">Kaldı</mat-radio-button>
             <mat-radio-button value="Test Edilmedi">Test Edilmedi</mat-radio-button>

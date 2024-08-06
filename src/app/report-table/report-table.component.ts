@@ -23,9 +23,10 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 export class ReportTableComponent implements OnInit {
 
   columns: ColumnDefinition[] = [
-    new ColumnDefinition('step_name', 'Name'),
-    new ColumnDefinition('step_procedure', 'Kategori'),
-    new ColumnDefinition('step_criteria', 'State'),
+    new ColumnDefinition('vtd_madde_no', 'VTD Madde NO'),
+    new ColumnDefinition('testAdimlari', 'Test Adımları'),
+    new ColumnDefinition('kabulKriteri', 'Kabul Kriteri'),
+    new ColumnDefinition('durum', 'State'),
     new ColumnDefinition('action', 'Action'),
     new ColumnDefinition('expand', 'Expand')
   ];
@@ -58,9 +59,9 @@ export class ReportTableComponent implements OnInit {
   }
 
   updateDonutChartData() {
-    const passed = this.data.filter(item => item.data.step_criteria === 'geçti').length;
-    const failed = this.data.filter(item => item.data.step_criteria === 'kaldı').length;
-    const notTested = this.data.filter(item => item.data.step_criteria === 'Test Edilmedi').length;
+    const passed = this.data.filter(item => item.data.durum === 'geçti').length;
+    const failed = this.data.filter(item => item.data.durum === 'kaldı').length;
+    const notTested = this.data.filter(item => item.data.durum === 'Test Edilmedi').length;
 
     this.donutChartData = [
       {name: 'Geçti', value: passed},
@@ -71,6 +72,7 @@ export class ReportTableComponent implements OnInit {
 
   onCriteriaChange(step: any, criteria: string) {
     this.reportService.updateSuccessCriteria(step.data.id, criteria);
+    console.log(step.data.scenario);
     this.scenarioId = step.data.scenario;
     const updatedStep = { ...step.data, step_criteria: criteria };
     this.changes.push(updatedStep);
@@ -97,4 +99,5 @@ export class ReportTableComponent implements OnInit {
       console.error('Scenario ID is null');
     }
   }
+
 }

@@ -4,7 +4,10 @@ export interface Test {
   owner: string;
   time: string;
   state: string;
-  step_criteria?: string;
+  durum?: string;
+  vdt_madde_no?: string;
+  kabulKriteri?: string;
+  testAdimlari?: string;
 
 }
 

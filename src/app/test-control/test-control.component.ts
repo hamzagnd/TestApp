@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { ColumnDefinition, ColumnType } from '../column';
 import { Router } from '@angular/router';
 import { ReportService } from '../report.service';
-import { AuthService } from '../auth.service';  
+import { AuthService } from '../auth.service';
 
 interface Test {
   id: number;
@@ -30,7 +30,7 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
   @Output() runTestClick = new EventEmitter<Test>();
 
   columns: ColumnDefinition[] = [
-    new ColumnDefinition('name', 'Name', ColumnType.STRING),
+    new ColumnDefinition('name', 'Scenario Name', ColumnType.STRING),
     new ColumnDefinition('user', 'User', ColumnType.STRING),
     new ColumnDefinition('version', 'Version', ColumnType.STRING),
     new ColumnDefinition('state', 'State', ColumnType.STRING),
@@ -53,7 +53,7 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
     private reportService: ReportService,
     private router: Router,
     public dialog: MatDialog,
-    private authService: AuthService  
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -114,8 +114,8 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser.is_superuser || currentUser.is_staff) {
       const dialogRef = this.dialog.open(ScenarioStepperComponent, {
-        width: '80vw',  // Genişliği artırarak pencerenin yatay olmasını sağlıyoruz
-        maxWidth: '80vw',  // Maksimum genişliği ayarlayarak pencerenin ekrana sığmasını sağlıyoruz
+        width: '90vw',  // Genişliği artırarak pencerenin yatay olmasını sağlıyoruz
+        maxWidth: '90vw',  // Maksimum genişliği ayarlayarak pencerenin ekrana sığmasını sağlıyoruz
         data: { scenario: this.selectedTest }
       });
 
