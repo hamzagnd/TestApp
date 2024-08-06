@@ -42,6 +42,7 @@ export class ScenarioStepperComponent implements OnInit {
     }
   }
 
+
   loadSteps(): void {
     this.scenarioService.getScenario(this.scenario.id).subscribe(scenario => {
       this.steps = scenario.steps;

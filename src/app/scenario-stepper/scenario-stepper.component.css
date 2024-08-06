@@ -23,6 +23,7 @@
   flex-direction: column;
 }
 
+
 /* Stepper Table Container: Step tablosunun yüksekliğini ayarlar ve dikey kaydırma çubuğunu ekler */
 .stepper-table-container {
   max-height: 700px;

@@ -7,6 +7,7 @@ import { ReportTableComponent } from './report-table/report-table.component';
 import { UsersComponent } from './users/users.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth.guard';
+import {TestCaseTableComponent} from "./test-case-table/test-case-table.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
