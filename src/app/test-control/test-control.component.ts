@@ -114,8 +114,8 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser.is_superuser || currentUser.is_staff) {
       const dialogRef = this.dialog.open(ScenarioStepperComponent, {
-        width: '80vw',  // Genişliği artırarak pencerenin yatay olmasını sağlıyoruz
-        maxWidth: '80vw',  // Maksimum genişliği ayarlayarak pencerenin ekrana sığmasını sağlıyoruz
+        width: '90vw',  // Genişliği artırarak pencerenin yatay olmasını sağlıyoruz
+        maxWidth: '90vw',  // Maksimum genişliği ayarlayarak pencerenin ekrana sığmasını sağlıyoruz
         data: { scenario: this.selectedTest }
       });
 

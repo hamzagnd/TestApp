@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{ data.step ? 'Edit Step' : 'Add Step' }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="stepForm">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>VTD Madde No</mat-label>
+      <input matInput formControlName="vtd_madde_no" required>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Test Adımları</mat-label>
+      <textarea matInput formControlName="testAdimlari" required></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Kabul Kriteri</mat-label>
+      <textarea matInput formControlName="kabulKriteri" required></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Durum</mat-label>
+      <input matInput formControlName="durum">
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Yorum</mat-label>
+      <textarea matInput formControlName="yorum"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()">Save</button>
+</mat-dialog-actions>
