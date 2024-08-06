@@ -1,4 +1,4 @@
-<app-generic-table [columns]="columns" [dataSource]="dataSource" [showAddDataForm]="true" [showFilter]="true" [showExportButton]="true" [showRefreshButton]="true" (rowClick)="onRowClick($event)" (runTestClick)="runTest($event)">
+<app-generic-table [columns]="columns" [dataSource]="dataSource" [showAddDataForm]="true" [showFilter]="true" [showExportButton]="true" [showUploadButton]="true" [showRefreshButton]="true" (rowClick)="onRowClick($event)" (runTestClick)="runTest($event)">
   <ng-template tableColumnTemplate="run" let-element let-i="index">
     <button mat-button color="primary" (click)="runTest(element.data)">Run</button>
   </ng-template>

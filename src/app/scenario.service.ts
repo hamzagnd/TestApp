@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class ScenarioService {
   private apiUrl = 'http://127.0.0.1:8000/api/scenarios/'; // Django API URL
+  private uploadUrl = 'http://127.0.0.1:8000/api/upload-excel/'; // Upload Excel URL
+
 
   constructor(private http: HttpClient) { }
 
@@ -42,6 +45,7 @@ export class ScenarioService {
     return this.http.put(`${this.apiUrl}${scenarioId}/steps/${step.id}/`, { ...step, scenario: scenarioId });
   }
 
+
   updateSteps(scenarioId: number, stepId: number, step: any): Observable<any> {
     return this.http.put(`${this.apiUrl}${scenarioId}/steps/${stepId}/`, { ...step, scenario: scenarioId });
   }
@@ -50,4 +54,12 @@ export class ScenarioService {
   deleteStep(scenarioId: number, stepId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}${scenarioId}/steps/${stepId}/`);
   }
+  uploadExcel(file: File, sheetName: string): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('sheet_name', sheetName);
+    return this.http.post(this.uploadUrl, formData);
+  }
+  
+  
 }

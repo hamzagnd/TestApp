@@ -1,0 +1,16 @@
+.full-width {
+    width: 100%;
+  }
+  
+  mat-form-field textarea {
+    resize: vertical; /* Kullanıcıların textarea'yı dikey olarak yeniden boyutlandırmasına izin ver */
+    min-height: 100px; /* Minimum yükseklik */
+    max-height: 400px; /* Maksimum yükseklik */
+  }
+  
+  mat-form-field input,
+  mat-form-field textarea {
+    overflow-wrap: break-word; /* Uzun kelimeleri kır */
+    white-space: pre-wrap; /* Boşlukları ve yeni satırları koru */
+  }
+  

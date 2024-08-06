@@ -1,0 +1,16 @@
+<div class="excel-upload">
+    <input type="file" (change)="onFileChange($event)" accept=".xlsx, .xls" />
+    <mat-form-field appearance="fill">
+      <mat-label>Sheet Name</mat-label>
+      <mat-select [(value)]="selectedSheetName">
+        <mat-option *ngFor="let sheetName of sheetNames" [value]="sheetName">
+          {{ sheetName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="onUpload()">Upload Excel</button>
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
+  
