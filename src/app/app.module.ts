@@ -56,6 +56,10 @@ import { UserEditComponent } from './user-edit/user-edit.component';
 import { UserChangePasswordComponent } from './user-change-password/user-change-password.component';
 import {TestCaseTableComponent} from "./test-case-table/test-case-table.component";
 
+import { StepFormComponent } from './step-form/step-form.component';
+import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
+
+
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
@@ -77,6 +81,8 @@ export function tokenGetter() {
     ConfirmDialogComponent,
     UserEditComponent,
     UserChangePasswordComponent,
+    StepFormComponent,
+    ExcelUploadComponent,
 
 
 

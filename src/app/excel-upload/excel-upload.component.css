@@ -1,0 +1,11 @@
+.excel-upload {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  

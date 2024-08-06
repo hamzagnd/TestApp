@@ -1,6 +1,5 @@
 <mat-card class="stepper-card">
   <h2>{{ scenario.name }}</h2>
-  <h3>Steps</h3>
   <div class="stepper-table-container">
     <table mat-table [dataSource]="paginatedSteps" class="mat-elevation-z8 custom-table">
       <ng-container matColumnDef="stepNumber">
@@ -8,7 +7,7 @@
         <td mat-cell *matCellDef="let step; let i = index">{{ i + 1 + (pageIndex * pageSize) }}</td>
       </ng-container>
       <ng-container matColumnDef="vtdMaddeNo">
-        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 15%;">VTD Madde No</th>
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">VTD Madde No</th>
         <td mat-cell *matCellDef="let step">{{ step.vtd_madde_no }}</td>
       </ng-container>
       <ng-container matColumnDef="testAdimlari">
@@ -20,11 +19,12 @@
         <td mat-cell *matCellDef="let step">{{ step.kabulKriteri }}</td>
       </ng-container>
       <ng-container matColumnDef="durum">
-        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 15%;">Durum</th>
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">Durum</th>
         <td mat-cell *matCellDef="let step">{{ step.durum }}</td>
       </ng-container>
       <ng-container matColumnDef="yorum">
-        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 20%;">Yorum</th>
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">Yorum</th>
+
         <td mat-cell *matCellDef="let step">{{ step.yorum }}</td>
       </ng-container>
       <ng-container matColumnDef="actions">
@@ -40,33 +40,9 @@
     </table>
   </div>
   <mat-paginator [length]="steps.length" [pageSize]="pageSize" (page)="handlePageEvent($event)" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  <h3>Add/Edit Step</h3>
-  <form [formGroup]="stepForm" class="stepper-form">
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>VTD Madde No</mat-label>
-      <input matInput formControlName="vtd_madde_no" required>
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Test Adımları</mat-label>
-      <input matInput formControlName="testAdimlari" required>
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Kabul Kriteri</mat-label>
-      <input matInput formControlName="kabulKriteri" required>
-    </mat-form-field>
-    <!--<mat-form-field appearance="fill" class="full-width">
-      <mat-label>Durum</mat-label>
-      <input matInput formControlName="durum">
-    </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Yorum</mat-label>
-      <input matInput formControlName="yorum">
-    </mat-form-field> -->
-
-  </form>
 
   <div class="stepper-buttons">
-    <button mat-raised-button color="primary" (click)="addStep()">Add/Save Step</button>
-    <button mat-button color="warn" (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="openStepDialog()">Add Step</button>
+    <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
   </div>
 </mat-card>

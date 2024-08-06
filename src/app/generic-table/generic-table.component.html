@@ -1,13 +1,32 @@
 <div class="button-container">
   <div *ngIf="showExportButton">
     <button mat-raised-button color="accent" (click)="exportToPDF()"> <mat-icon>save_alt</mat-icon> Export to PDF</button>
-
   </div>
 
   <div *ngIf="showRefreshButton">
     <button mat-raised-button color="accent" (click)="refreshTable()"> <mat-icon>refresh</mat-icon> Refresh </button>
   </div>
+
+  <div *ngIf="showUploadButton"> 
+    <button mat-raised-button color="accent" (click)="triggerExcelUpload()">
+      <mat-icon>cloud_upload</mat-icon> Upload Excel
+    </button>
+    <input #excelInput type="file" (change)="onFileChange($event)" style="display: none;" accept=".xlsx, .xls">
+  </div>
+  
+  <div *ngIf="sheetNames.length > 0">
+    <mat-form-field appearance="fill">
+      <mat-label>Select Sheet</mat-label>
+      <mat-select [(value)]="selectedSheetName">
+        <mat-option *ngFor="let sheetName of sheetNames" [value]="sheetName">
+          {{ sheetName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="onUpload()">Upload</button>
+  </div>
 </div>
+
 
 
 <div *ngIf="showFilter">

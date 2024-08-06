@@ -29,6 +29,9 @@ import { AuthService } from '../auth.service';
 import { ExcelService } from "../excelService";
 import html2canvas from "html2canvas";
 
+import * as XLSX from 'xlsx';  // Excel dosyasını işlemek için
+
+
 @Component({
   selector: 'app-generic-table',
   templateUrl: './generic-table.component.html',
@@ -43,15 +46,12 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   @Input() showFilter: boolean = false;
   @Input() showExpand: boolean = false;
   @Input() showSummit: boolean = false;
+  @Input() showUploadButton: boolean = false;
 
   newData: Partial<T> = {};
 
   errorMessage: string = '';
 
-  sheetNames: string[] = [];
-  selectedSheet: string = '';
-  file: File | null = null;
-  observedList: any[] = [];
 
   @Output() rowClick = new EventEmitter<T>();
   @Output() runTestClick = new EventEmitter<T>();
@@ -63,6 +63,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   @ViewChild('donutChartContainer') donutChartContainer: ElementRef;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('excelInput') excelInput: ElementRef;  // Excel input elementini al
 
   length = 0;
   pageSize = 5;
@@ -70,6 +71,8 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   displayedColumnKeys: string[] = [];
   columnTemplateMap = new Map<string, TemplateRef<any>>();
   expandedElement: T | null;
+  sheetNames: string[] = [];
+  selectedSheetName: string = '';
 
   constructor(
     private scenarioService: ScenarioService,
@@ -279,4 +282,45 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
 
   protected readonly ColumnType = ColumnType;
 
+  triggerExcelUpload(): void {
+    this.excelInput.nativeElement.click();
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        this.sheetNames = workbook.SheetNames;
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  }
+
+  onUpload(): void {
+    const fileInputElement = this.excelInput.nativeElement as HTMLInputElement;
+    const file = fileInputElement.files ? fileInputElement.files[0] : null;
+    if (file && this.selectedSheetName) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('sheet_name', this.selectedSheetName);
+      this.scenarioService.uploadExcel(file, this.selectedSheetName).subscribe(
+        response => {
+          console.log('Excel uploaded successfully', response);
+          this.snackBar.open('Excel uploaded successfully', 'Close', { duration: 3000 });
+          this.refreshTable();
+        },
+        error => {
+          console.error('Error uploading Excel file', error);
+          this.snackBar.open('Error uploading Excel file', 'Close', { duration: 3000 });
+        }
+      );
+      
+    } else {
+      this.snackBar.open('Please select a file and a sheet name.', 'Close', { duration: 3000 });
+    }
+  }
 }

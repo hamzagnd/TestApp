@@ -1,3 +1,4 @@
+/* Mat Dialog Container: Dialog penceresinin stil ayarları */
 .mat-dialog-container {
   padding: 0;
   margin: 0;
@@ -8,6 +9,7 @@
   width: 100vw;
 }
 
+/* Stepper Card: Stepper bileşeninin kart stil ayarları */
 .stepper-card {
   padding: 20px;
   margin: 0;
@@ -21,31 +23,44 @@
   flex-direction: column;
 }
 
+
+/* Stepper Table Container: Step tablosunun yüksekliğini ayarlar ve dikey kaydırma çubuğunu ekler */
 .stepper-table-container {
-  max-height: 400px;
+  max-height: 700px;
   overflow-y: auto;
 }
 
+/* Custom Table: Tablo stil ayarları */
 .mat-elevation-z8.custom-table {
   width: 100%;
 }
 
+/* Form Container: Form alanının yüksekliğini ayarlar ve dikey kaydırma çubuğunu ekler */
+.form-container {
+  max-height: 200px; /* Form alanı yüksekliği */
+  overflow-y: auto; /* Dikey kaydırma çubuğu */
+}
+
+/* Stepper Form: Formun flex düzeninde ayarları */
 .stepper-form {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
+/* Full Width: Elemanların tam genişlikte olmasını sağlar */
 .full-width {
   width: 100%;
 }
 
+/* Stepper Buttons: Butonların düzenini ayarlar */
 .stepper-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
+/* Stepper Card Başlıklar: Kart içindeki başlıkların stil ayarları */
 .stepper-card h2, .stepper-card h3 {
   margin-top: 0;
   font-weight: 500;
@@ -53,23 +68,27 @@
   text-align: center;
 }
 
+/* Stepper Card H2: Ana başlığın font boyutunu ayarlar */
 .stepper-card h2 {
   font-size: 2.5rem;
 }
 
+/* Stepper Card H3: Alt başlığın font boyutunu ayarlar */
 .stepper-card h3 {
   font-size: 2rem;
   margin-bottom: 20px;
 }
 
+/* Custom Table Hücreler: Tablo hücrelerinin stil ayarları */
 .custom-table th, .custom-table td {
   padding: 10px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   word-break: break-word;
   white-space: normal;
   overflow-wrap: break-word;
 }
 
+/* Header Cell: Tablo başlık hücrelerinin stil ayarları */
 .header-cell {
   font-weight: bold;
   color: #3f51b5;
@@ -78,10 +97,12 @@
   white-space: nowrap;
 }
 
+/* Custom Table Başlık: Tablo başlıklarının arka plan rengini ayarlar */
 .custom-table th {
   background-color: #fafafa;
 }
 
+/* Sticky Header: Tablo başlıklarının sayfa kaydırıldığında sabit kalmasını sağlar */
 .sticky-header {
   position: sticky;
   top: 0;
@@ -89,22 +110,26 @@
   z-index: 2;
 }
 
+/* Mat Form Field: Mat form alanlarının genişliğini ve alt kenar boşluğunu ayarlar */
 mat-form-field {
   width: 100%;
   margin-bottom: 20px;
 }
 
+/* Buton: Butonların üst kenar boşluğunu ve font ailesini ayarlar */
 button {
   margin-top: 10px;
   font-family: 'Roboto', sans-serif;
 }
 
+/* Mat Horizontal Stepper Header: Yatay stepper başlıklarının stil ayarları */
 ::ng-deep .mat-horizontal-stepper-header .mat-step-label {
   font-size: 1.5rem;
   font-weight: 500;
   color: #3f51b5;
 }
 
+/* Mat Horizontal Stepper Content: Yatay stepper içeriğinin stil ayarları */
 ::ng-deep .mat-horizontal-stepper-content {
   padding: 20px;
   background-color: #ffffff;
@@ -113,6 +138,7 @@ button {
   margin-top: 10px;
 }
 
+/* Body: Sayfa genelinde font ailesini ayarlar */
 body {
   font-family: 'Roboto', sans-serif;
 }

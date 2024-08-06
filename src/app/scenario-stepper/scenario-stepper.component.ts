@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, Inject, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ScenarioService } from '../scenario.service';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { StepFormComponent } from '../step-form/step-form.component';
 
 @Component({
   selector: 'app-scenario-stepper',
@@ -16,7 +16,6 @@ export class ScenarioStepperComponent implements OnInit {
   @Output() scenarioUpdated = new EventEmitter<any>();
 
   steps: any[] = [];
-  stepForm: FormGroup;
   selectedStepIndex: number | null = null;
 
   pageSize = 5;
@@ -26,7 +25,6 @@ export class ScenarioStepperComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
-    private fb: FormBuilder,
     public dialogRef: MatDialogRef<ScenarioStepperComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private scenarioService: ScenarioService,
@@ -39,14 +37,6 @@ export class ScenarioStepperComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stepForm = this.fb.group({
-      vtd_madde_no: ['', Validators.required],
-      testAdimlari: ['', Validators.required],
-      kabulKriteri: ['', Validators.required],
-      //durum: [''],
-      //yorum: ['']
-    });
-
     if (this.scenario) {
       this.loadSteps();
     }
@@ -62,7 +52,6 @@ export class ScenarioStepperComponent implements OnInit {
     });
   }
 
-
   updatePaginatedSteps(): void {
     const startIndex = this.pageIndex * this.pageSize;
     const endIndex = startIndex + this.pageSize;
@@ -75,46 +64,56 @@ export class ScenarioStepperComponent implements OnInit {
     this.updatePaginatedSteps();
   }
 
-  addStep(): void {
-    if (this.stepForm.valid) {
-      const newStep = this.stepForm.value;
-      if (this.selectedStepIndex !== null) {
-        const absoluteIndex = this.pageIndex * this.pageSize + this.selectedStepIndex;
-        this.scenarioService.updateStep(this.scenario.id, { ...newStep, id: this.steps[absoluteIndex].id }).subscribe(updatedStep => {
-          this.steps[absoluteIndex] = updatedStep;
+  openStepDialog(step: any = null, index: number | null = null): void {
+    const dialogRef = this.dialog.open(StepFormComponent, {
+      width: '400px',
+      data: { step }
+    });
 
-          this.selectedStepIndex = null;
-          this.stepForm.reset();
-          this.loadSteps(); // Refresh the steps
-        });
-      } else {
-        this.scenarioService.addStep(this.scenario.id, newStep).subscribe(step => {
-          this.steps.push(step);
-          this.stepForm.reset();
-          this.loadSteps(); // Refresh the steps
-        }, error => {
-          console.error('Error adding step:', error);
-        });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (index !== null) {
+          this.updateStep(result, index);
+        } else {
+          this.addStep(result);
+        }
       }
-    }
+    });
+  }
+
+  addStep(stepData: any): void {
+    this.scenarioService.addStep(this.scenario.id, stepData).subscribe(step => {
+      this.steps.push(step);
+      this.updatePaginatedSteps(); // Refresh the steps
+    }, error => {
+      console.error('Error adding step:', error);
+    });
+  }
+
+  updateStep(stepData: any, index: number): void {
+    const absoluteIndex = this.pageIndex * this.pageSize + index;
+    const stepId = this.steps[absoluteIndex].id;
+    this.scenarioService.updateStep(this.scenario.id, { ...stepData, id: stepId }).subscribe(updatedStep => {
+      this.steps[absoluteIndex] = updatedStep;
+      this.updatePaginatedSteps(); // Refresh the steps
+    });
   }
 
   editStep(index: number): void {
-    const absoluteIndex = this.pageIndex * this.pageSize + index
-    this.selectedStepIndex = index;
-    this.stepForm.patchValue(this.steps[absoluteIndex]);
+    const absoluteIndex = this.pageIndex * this.pageSize + index;
+    this.openStepDialog(this.steps[absoluteIndex], index);
   }
 
   deleteStep(index: number): void {
     const absoluteIndex = this.pageIndex * this.pageSize + index;
+    const stepId = this.steps[absoluteIndex].id;
     const dialogRef = this.dialog.open(ConfirmDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const stepId = this.steps[absoluteIndex].id;
         this.scenarioService.deleteStep(this.scenario.id, stepId).subscribe(() => {
           this.steps.splice(absoluteIndex, 1);
-          this.loadSteps(); // Refresh the steps
+          this.updatePaginatedSteps(); // Refresh the steps
         });
       }
     });

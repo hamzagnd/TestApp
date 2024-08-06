@@ -23,9 +23,11 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 export class ReportTableComponent implements OnInit {
 
   columns: ColumnDefinition[] = [
+
     new ColumnDefinition('vtd_madde_no', 'VTD Madde NO'),
     new ColumnDefinition('testAdimlari', 'Test Adımları'),
     new ColumnDefinition('kabulKriteri', 'Kabul Kriteri'),
+
     new ColumnDefinition('durum', 'State'),
     new ColumnDefinition('action', 'Action'),
     new ColumnDefinition('expand', 'Expand')
@@ -101,3 +103,4 @@ export class ReportTableComponent implements OnInit {
   }
 
 }
+
