@@ -23,9 +23,11 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 export class ReportTableComponent implements OnInit {
 
   columns: ColumnDefinition[] = [
-    new ColumnDefinition('vtd_madde_no', 'VTD NO'),
-    new ColumnDefinition('testAdimlari', 'Name'),
-    new ColumnDefinition('kabulKriteri', 'Kategori'),
+
+    new ColumnDefinition('vtd_madde_no', 'VTD Madde NO'),
+    new ColumnDefinition('testAdimlari', 'Test Adımları'),
+    new ColumnDefinition('kabulKriteri', 'Kabul Kriteri'),
+
     new ColumnDefinition('durum', 'State'),
     new ColumnDefinition('action', 'Action'),
     new ColumnDefinition('expand', 'Expand')
@@ -72,6 +74,7 @@ export class ReportTableComponent implements OnInit {
 
   onCriteriaChange(step: any, criteria: string) {
     this.reportService.updateSuccessCriteria(step.data.id, criteria);
+    console.log(step.data.scenario);
     this.scenarioId = step.data.scenario;
     const updatedStep = { ...step.data, step_criteria: criteria };
     this.changes.push(updatedStep);
@@ -98,4 +101,6 @@ export class ReportTableComponent implements OnInit {
       console.error('Scenario ID is null');
     }
   }
+
 }
+

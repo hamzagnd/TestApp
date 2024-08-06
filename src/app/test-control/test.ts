@@ -4,9 +4,11 @@ export interface Test {
   owner: string;
   time: string;
   state: string;
+
   test_adimlari?: string;
   kabul_kriteri?: string;
   durum?: string;
+
 
 }
 

@@ -123,7 +123,8 @@ export class AuthService {
   }
 
   canEditScenario(): boolean {
-    return this.userPermissions.can_edit_scenario || this.currentUser.is_superuser || false;
+    return this.userPermissions.can_edit_scenario ||
+      this.currentUser.is_superuser || false;
   }
 
   canDeleteScenario(): boolean {

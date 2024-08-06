@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { ColumnDefinition, ColumnType } from '../column';
 import { Router } from '@angular/router';
 import { ReportService } from '../report.service';
-import { AuthService } from '../auth.service';  
+import { AuthService } from '../auth.service';
 
 interface Test {
   id: number;
@@ -30,7 +30,7 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
   @Output() runTestClick = new EventEmitter<Test>();
 
   columns: ColumnDefinition[] = [
-    new ColumnDefinition('name', 'Name', ColumnType.STRING),
+    new ColumnDefinition('name', 'Scenario Name', ColumnType.STRING),
     new ColumnDefinition('user', 'User', ColumnType.STRING),
     new ColumnDefinition('version', 'Version', ColumnType.STRING),
     new ColumnDefinition('state', 'State', ColumnType.STRING),
@@ -53,7 +53,7 @@ export class TestControlComponent implements OnInit, OnChanges, OnDestroy {
     private reportService: ReportService,
     private router: Router,
     public dialog: MatDialog,
-    private authService: AuthService  
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
