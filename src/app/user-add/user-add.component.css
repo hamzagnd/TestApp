@@ -1,14 +1,9 @@
-.user-card {
+.user-container {
   max-width: 700px;
   margin: 60px auto;
   padding: 30px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  transition: all 0.3s ease-in-out;
-}
-
-.user-card:hover {
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 0; /* Çerçeveyi kaldırma */
+  background-color: transparent; /* Arka plan rengini kaldırma */
 }
 
 .user-form {
@@ -22,6 +17,23 @@
 
 .mat-form-field {
   margin-bottom: 20px;
+  font-size: 1.2rem; /* Form alanı yazı boyutunu büyütme */
+}
+
+.mat-form-field.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  padding: 0 0.75em;
+}
+
+.mat-form-field-infix {
+  padding: 0.75em 0;
+}
+
+input.mat-input-element {
+  height: 2.5em; /* Input alanının yüksekliğini artırma */
+}
+
+textarea.mat-input-element {
+  height: 5em; /* Textarea alanının yüksekliğini artırma */
 }
 
 .form-actions {
@@ -33,7 +45,7 @@
 .form-actions button {
   margin-left: 10px;
   padding: 10px 20px;
-  font-size: 1rem;
+  font-size: 1.2rem; /* Buton yazı boyutunu büyütme */
 }
 
 button[mat-raised-button] {

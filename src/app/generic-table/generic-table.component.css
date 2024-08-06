@@ -3,10 +3,7 @@
   width: 150%;
   height: 150%;
   text-align: left;
-
 }
-
-
 
 .button-container {
   display: flex;
@@ -41,8 +38,6 @@
   vertical-align: middle;
 }
 
-/* Eklenen ek stiller */
-
 .add-data-form {
   display: flex;
   flex-wrap: wrap;
@@ -59,3 +54,13 @@
   margin-top: 20px; /* Paginatör ile üstündeki içerikler arasında boşluk */
 }
 
+.hover:hover {
+  background-color: #f5f5f5;
+  cursor: pointer; /* Tıklanabilir olduğunu belirtmek için imleci el işaretine dönüştürür */
+  transition: background-color 0.3s ease;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
