@@ -10,6 +10,10 @@
         <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">VTD Madde No</th>
         <td mat-cell *matCellDef="let step">{{ step.vtd_madde_no }}</td>
       </ng-container>
+      <ng-container matColumnDef="topoloji">
+        <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 20%;">Topoloji</th>
+        <td mat-cell *matCellDef="let step">{{ step.topoloji }}</td>
+      </ng-container>
       <ng-container matColumnDef="testAdimlari">
         <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 20%;">Test Adımları</th>
         <td mat-cell *matCellDef="let step">{{ step.testAdimlari }}</td>
@@ -22,10 +26,10 @@
         <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">Durum</th>
         <td mat-cell *matCellDef="let step">{{ step.durum }}</td>
       </ng-container>
-      <ng-container matColumnDef="yorum">
+     <!-- <ng-container matColumnDef="yorum">
         <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">Yorum</th>
         <td mat-cell *matCellDef="let step">{{ step.yorum }}</td>
-      </ng-container>
+      </ng-container> -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="header-cell" style="width: 10%;">Actions</th>
         <td mat-cell *matCellDef="let step; let i = index">
@@ -34,11 +38,11 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="['stepNumber', 'vtdMaddeNo', 'testAdimlari', 'kabulKriteri', 'durum', 'yorum', 'actions']" class="sticky-header"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['stepNumber', 'vtdMaddeNo', 'testAdimlari', 'kabulKriteri', 'durum', 'yorum', 'actions'];"></tr>
+      <tr mat-header-row *matHeaderRowDef="['stepNumber', 'vtdMaddeNo', 'topoloji', 'testAdimlari', 'kabulKriteri', 'durum', 'actions']" class="sticky-header"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['stepNumber', 'vtdMaddeNo', 'topoloji', 'testAdimlari', 'kabulKriteri', 'durum', 'actions'];"></tr>
     </table>
   </div>
-  <mat-paginator [length]="steps.length" [pageSize]="pageSize" (page)="handlePageEvent($event)" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [length]="steps.length" [pageSize]="pageSize" (page)="handlePageEvent($event)" [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
   <div class="stepper-buttons">
     <button mat-raised-button color="primary" (click)="openStepDialog()">Add Step</button>
     <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>

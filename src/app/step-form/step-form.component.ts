@@ -19,10 +19,11 @@ export class StepFormComponent implements OnInit {
   ngOnInit(): void {
     this.stepForm = this.fb.group({
       vtd_madde_no: [this.data?.step?.vtd_madde_no || '', Validators.required],
+      topoloji: [this.data?.step?.topoloji || '', Validators.required], 
       testAdimlari: [this.data?.step?.testAdimlari || '', Validators.required],
       kabulKriteri: [this.data?.step?.kabulKriteri || '', Validators.required],
       durum: [this.data?.step?.durum || ''],
-      yorum: [this.data?.step?.yorum || '']
+      //yorum: [this.data?.step?.yorum || '']
     });
   }
 
