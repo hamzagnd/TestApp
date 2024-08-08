@@ -6,6 +6,8 @@ import {Test} from '../test-control/test';
 import {ReportService} from '../report.service';
 import {ScenarioService} from "../scenario.service";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {MatDialog} from "@angular/material/dialog";
+import {CommentDialogComponent} from "../comment-dialog/comment-dialog.component";
 
 @Component({
   selector: 'app-report-table',
@@ -29,7 +31,7 @@ export class ReportTableComponent implements OnInit {
     new ColumnDefinition('kabulKriteri', 'Kabul Kriteri',ColumnType.STRING),
     new ColumnDefinition('durum', 'State',ColumnType.STRING),
     new ColumnDefinition('action', 'Action',ColumnType.CUSTOM),
-    new ColumnDefinition('expand', 'Expand', ColumnType.CUSTOM)
+    new ColumnDefinition('comment', 'Yorum', ColumnType.CUSTOM)
   ];
 
   data: TableData<Test>[] = [];
@@ -43,7 +45,7 @@ export class ReportTableComponent implements OnInit {
   scenarioId: number | null = null;
   changes: any[] = [];
 
-  constructor(private reportService: ReportService, private scenarioService: ScenarioService) {
+  constructor(private reportService: ReportService, private scenarioService: ScenarioService, public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -57,6 +59,21 @@ export class ReportTableComponent implements OnInit {
 
   onRowClick(test: Test) {
     // console.log('Row clicked:', test);
+  }
+
+  onCommentClick(element: any): void {
+    const dialogRef = this.dialog.open(CommentDialogComponent, {
+      width: '600px',
+      height: '600px',
+      data: { comment: element.data.yorum }
+
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        element.data.comment = result;
+      }
+    });
   }
 
   updateDonutChartData() {

@@ -58,6 +58,7 @@ import {TestCaseTableComponent} from "./test-case-table/test-case-table.componen
 
 import { StepFormComponent } from './step-form/step-form.component';
 import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
+import { CommentDialogComponent } from './comment-dialog/comment-dialog.component';
 
 
 export function tokenGetter() {
@@ -83,6 +84,7 @@ export function tokenGetter() {
     UserChangePasswordComponent,
     StepFormComponent,
     ExcelUploadComponent,
+    CommentDialogComponent,
 
 
 

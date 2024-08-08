@@ -29,7 +29,6 @@ import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
 
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import {TDocumentDefinitions} from "pdfmake/interfaces";
 
@@ -39,14 +38,7 @@ import 'jspdf-autotable';
 @Component({
   selector: 'app-generic-table',
   templateUrl: './generic-table.component.html',
-  styleUrls: ['./generic-table.component.css'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
+  styleUrls: ['./generic-table.component.css']
 })
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit, OnChanges {
   @Input() columns: ColumnDefinition[] = [];
@@ -76,7 +68,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   pageSizeOptions: number[] = [5, 10, 20, 30, 50, 100];
   displayedColumnKeys: string[] = [];
   columnTemplateMap = new Map<string, TemplateRef<any>>();
-  expandedElement: T | null;
   sheetNames: string[] = [];
   selectedSheetName: string = '';
 
@@ -93,11 +84,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
       this.columnTemplateMap.set(template.columnName, template.templateRef);
     });
   }
-  scrollToElement(element: HTMLElement) {
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
+
 
   getTemplateForColumn(columnKey: string): TemplateRef<any> | null {
     return this.columnTemplateMap.get(columnKey) || null;
@@ -358,5 +345,4 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     }
   }
 
-  protected readonly scroll = scroll;
 }
