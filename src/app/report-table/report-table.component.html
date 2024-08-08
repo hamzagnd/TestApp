@@ -24,6 +24,13 @@
           </mat-icon>
         </ng-template>
 
+        <ng-template tableColumnTemplate="comment" let-element>
+          <button mat-icon-button color="primary" (click)="onCommentClick(element)">
+            <mat-icon>comment</mat-icon>
+          </button>
+        </ng-template>
+
+
       </app-generic-table>
     </div>
   </mat-tab>

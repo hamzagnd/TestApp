@@ -29,7 +29,6 @@ import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
 
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import {TDocumentDefinitions} from "pdfmake/interfaces";
 
@@ -76,7 +75,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   pageSizeOptions: number[] = [5, 10, 20, 30, 50, 100];
   displayedColumnKeys: string[] = [];
   columnTemplateMap = new Map<string, TemplateRef<any>>();
-  expandedElement: T | null;
   sheetNames: string[] = [];
   selectedSheetName: string = '';
 
@@ -98,6 +96,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
       element.scrollIntoView({ behavior: 'smooth' });
     }
   }
+
 
   getTemplateForColumn(columnKey: string): TemplateRef<any> | null {
     return this.columnTemplateMap.get(columnKey) || null;
@@ -357,6 +356,4 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
       this.snackBar.open('Please select a file and a sheet name.', 'Close', { duration: 3000 });
     }
   }
-
-  protected readonly scroll = scroll;
 }
