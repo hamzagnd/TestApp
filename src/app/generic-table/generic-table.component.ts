@@ -10,7 +10,8 @@ import {
   SimpleChanges,
   TemplateRef,
   QueryList,
-  ContentChildren, ElementRef
+  ContentChildren,
+  ElementRef
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -21,21 +22,31 @@ import { TableData } from '../models/table-data.model';
 import { ScenarioService } from '../scenario.service';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ColumnDefinition, ColumnType } from '../column';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import * as XLSX from 'xlsx';
+import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
+
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+
+import {TDocumentDefinitions} from "pdfmake/interfaces";
+
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { ColumnTemplateDirective } from '../ColumnTemplateDirective';
-import { Router } from "@angular/router";
-import { AuthService } from '../auth.service';
-import { ExcelService } from "../excelService";
-import html2canvas from "html2canvas";
-
-import * as XLSX from 'xlsx';  // Excel dosyasını işlemek için
-
 
 @Component({
   selector: 'app-generic-table',
   templateUrl: './generic-table.component.html',
-  styleUrls: ['./generic-table.component.css']
+  styleUrls: ['./generic-table.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit, OnChanges {
   @Input() columns: ColumnDefinition[] = [];
@@ -49,24 +60,19 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   @Input() showUploadButton: boolean = false;
 
   newData: Partial<T> = {};
-
   errorMessage: string = '';
-
-
   @Output() rowClick = new EventEmitter<T>();
   @Output() runTestClick = new EventEmitter<T>();
 
   @ContentChildren(ColumnTemplateDirective) columnTemplates: QueryList<ColumnTemplateDirective>;
-
   @ViewChild('customColumn') customColumnTemplate: TemplateRef<T>;
   @ViewChild('tableContainer') tableContainer: ElementRef;
   @ViewChild('donutChartContainer') donutChartContainer: ElementRef;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild('excelInput') excelInput: ElementRef;  // Excel input elementini al
+  @ViewChild('excelInput') excelInput: ElementRef;
 
   length = 0;
-  pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 20, 30, 50, 100];
   displayedColumnKeys: string[] = [];
   columnTemplateMap = new Map<string, TemplateRef<any>>();
@@ -80,13 +86,17 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     public dialog: MatDialog,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private excelService: ExcelService
-  ) { }
+  ) {}
 
   ngAfterContentInit() {
     this.columnTemplates.forEach(template => {
       this.columnTemplateMap.set(template.columnName, template.templateRef);
     });
+  }
+  scrollToElement(element: HTMLElement) {
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   getTemplateForColumn(columnKey: string): TemplateRef<any> | null {
@@ -94,7 +104,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   }
 
   ngOnInit(): void {
-    //this.fetchScenarios();
   }
 
   ngAfterViewInit(): void {
@@ -151,44 +160,71 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     }
   }
 
-  exportToPDF() {
+  /*exportToPDF() {
+    const steps = this.dataSource.data.flatMap(item => item.data.steps);
+    const failedSteps = steps.filter(step => step.durum && step.durum.toLowerCase() === 'kaldı');
+    const notTestedSteps = steps.filter(step => step.durum && step.durum.toLowerCase() === 'test edilmedi');
+
+    const countFailed = failedSteps.length;
+    const countNotTested = notTestedSteps.length;
+
     const doc = new jsPDF();
+    doc.text('Failed Steps Report', 14, 16);
 
-    // Tablo başlığı
-    doc.text('Scenario Report', 10, 10);
+    doc.text(`Kaldı Toplam Sayı: ${countFailed}`, 14, 26);
+    doc.text(`Test Edilmedi Toplam Sayı: ${countNotTested}`, 14, 36);
 
-    const columns = this.columns.map(col => ({ title: col.header, dataKey: col.key }));
-
-    // Senaryo veri satırları
-    const rows = this.dataSource.data.map((row: TableData<T>) => {
-      return this.columns.reduce((acc, col) => {
-        acc[col.key] = row.data[col.key];
-        return acc;
-      }, {} as { [key: string]: any });
+    (doc as any).autoTable({
+      head: [['VTD Madde NO', 'State', 'Yorum']],
+      body: failedSteps.map(step => [step.vtd_madde_no || 'Bilinmiyor', step.durum || 'Bilinmiyor', step.yorum || 'Bilinmiyor']),
+      startY: 46,
+      margin: { top: 20 }
     });
 
-    // Her senaryonun geçti, kaldı ve test edilmedi adımlarını hesaplayın
-    const scenarioData = this.dataSource.data.map(row => {
-      const name = row.data['name'];
-      const geçti = this.dataSource.data.filter(item => item.data.name === name && item.data.durum === 'geçti').length;
-      const kaldı = this.dataSource.data.filter(item => item.data.name === name && item.data.durum === 'kaldı').length;
-      const testEdilmedi = this.dataSource.data.filter(item => item.data.name === name && item.data.durum === 'Test Edilmedi').length;
-      return { name, geçti, kaldı, testEdilmedi };
-    });
+    doc.save('report.pdf');
+  }*/
 
-    // Senaryo veri satırlarına geçti, kaldı ve test edilmedi sütunlarını ekleyin
-    rows.forEach(row => {
-      const scenario = scenarioData.find(s => s.name === row.name);
-      if (scenario) {
-        row['Geçti'] = scenario.geçti;
-        row['Kaldı'] = scenario.kaldı;
-        row['Test Edilmedi'] = scenario.testEdilmedi;
+  exportToPDF() {
+    const steps = this.dataSource.data.flatMap(item => item.data.steps);
+    const failedSteps = steps.filter(step => step.durum && step.durum.toLowerCase() === 'kaldı');
+    const notTestedSteps = steps.filter(step => step.durum && step.durum.toLowerCase() === 'test edilmedi');
+
+    const countFailed = failedSteps.length;
+    const countNotTested = notTestedSteps.length;
+
+    const docDefinition = {
+      content: [
+        { text: 'Failed Steps Report', style: 'header' },
+        { text: `Kaldı Toplam Sayı: ${countFailed}`, margin: [0, 10] },
+        { text: `Test Edilmedi Toplam Sayı: ${countNotTested}`, margin: [0, 10] },
+        {
+          table: {
+            headerRows: 1,
+            body: [
+              ['VTD Madde NO', 'State', 'Yorum'],
+              ...failedSteps.map(step => [
+                step.vtd_madde_no || 'Bilinmiyor',
+                step.durum || 'Bilinmiyor',
+                step.yorum || 'Bilinmiyor'
+              ])
+            ]
+          },
+          layout: 'lightHorizontalLines'
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10]
+        }
       }
-    });
+    } as TDocumentDefinitions;
 
-    (doc as any).autoTable(columns, rows);
-    doc.save('table.pdf');
+    pdfMake.createPdf(docDefinition, null, null, pdfFonts.pdfMake.vfs)
+      .download('failed-steps-report.pdf');
   }
+
 
   onRowClick(row: TableData<T>) {
     this.rowClick.emit(row.data);
@@ -202,7 +238,7 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     if (this.authService.canEditScenario()) {
       const dialogRef = this.dialog.open(EditDialogComponent, {
         width: '250px',
-        data: { row: { ...row.data }, displayedColumns: this.columns.map(c => c.key) }
+        data: { row: { ...row.data }, displayedColumns: this.columns.filter(c => c.type === ColumnType.STRING).map(c => c.key) }
       });
 
       dialogRef.afterClosed().subscribe(result => {
@@ -274,7 +310,6 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource.filter);
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -318,9 +353,10 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
           this.snackBar.open('Error uploading Excel file', 'Close', { duration: 3000 });
         }
       );
-      
     } else {
       this.snackBar.open('Please select a file and a sheet name.', 'Close', { duration: 3000 });
     }
   }
+
+  protected readonly scroll = scroll;
 }

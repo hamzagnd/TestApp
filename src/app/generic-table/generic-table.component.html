@@ -1,19 +1,23 @@
 <div class="button-container">
   <div *ngIf="showExportButton">
-    <button mat-raised-button color="accent" (click)="exportToPDF()"> <mat-icon>save_alt</mat-icon> Export to PDF</button>
+    <button mat-raised-button color="accent" (click)="exportToPDF()">
+      <mat-icon>save_alt</mat-icon> Export to PDF
+    </button>
   </div>
 
   <div *ngIf="showRefreshButton">
-    <button mat-raised-button color="accent" (click)="refreshTable()"> <mat-icon>refresh</mat-icon> Refresh </button>
+    <button mat-raised-button color="accent" (click)="refreshTable()">
+      <mat-icon>refresh</mat-icon> Refresh
+    </button>
   </div>
 
-  <div *ngIf="showUploadButton"> 
+  <div *ngIf="showUploadButton">
     <button mat-raised-button color="accent" (click)="triggerExcelUpload()">
       <mat-icon>cloud_upload</mat-icon> Upload Excel
     </button>
     <input #excelInput type="file" (change)="onFileChange($event)" style="display: none;" accept=".xlsx, .xls">
   </div>
-  
+
   <div *ngIf="sheetNames.length > 0">
     <mat-form-field appearance="fill">
       <mat-label>Select Sheet</mat-label>
@@ -27,8 +31,6 @@
   </div>
 </div>
 
-
-
 <div *ngIf="showFilter">
   <mat-form-field>
     <mat-label>Filter</mat-label>
@@ -40,7 +42,7 @@
   <ng-container matColumnDef="expand">
     <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+      <button mat-icon-button aria-label="expand row" (click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation()">
         <mat-icon>{{ expandedElement === element ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
       </button>
     </td>
@@ -49,7 +51,7 @@
 
 <div *ngIf="showAddDataForm">
   <ng-container *ngFor="let column of columns">
-    <mat-form-field appearance="fill" *ngIf="column.type !== ColumnType.CUSTOM ">
+    <mat-form-field appearance="fill" *ngIf="column.type !== ColumnType.CUSTOM">
       <mat-label>{{ column.header }}</mat-label>
       <input matInput [(ngModel)]="newData[column.key]" placeholder="{{ column.header }}">
     </mat-form-field>
@@ -57,7 +59,7 @@
   <button mat-raised-button color="primary" (click)="addData()">Add</button>
 </div>
 
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="mat-elevation-z8">
   <ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column.key">
     <th mat-header-cell *matHeaderCellDef> {{ column.header }} </th>
     <td mat-cell *matCellDef="let element" (click)="onRowClick(element)" [ngClass]="getStateClass(element.data[column.key])" class="hover">
@@ -79,9 +81,27 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumnKeys.length">
+      <div class="example-element-detail"
+           [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <div class="example-element-description">
+          <!-- Detay içeriği buraya -->
+          <p>ssssss</p>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumnKeys"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumnKeys;" class="hover"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumnKeys"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedElement === row"
+      (click)="expandedElement = expandedElement === row ? null : row">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>
+
 
 <mat-paginator [pageSize]="10" [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
 

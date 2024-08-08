@@ -24,13 +24,12 @@ export class ReportTableComponent implements OnInit {
 
   columns: ColumnDefinition[] = [
 
-    new ColumnDefinition('vtd_madde_no', 'VTD Madde NO'),
-    new ColumnDefinition('testAdimlari', 'Test Adımları'),
-    new ColumnDefinition('kabulKriteri', 'Kabul Kriteri'),
-
-    new ColumnDefinition('durum', 'State'),
-    new ColumnDefinition('action', 'Action'),
-    new ColumnDefinition('expand', 'Expand')
+    new ColumnDefinition('vtd_madde_no', 'VTD Madde NO',ColumnType.STRING),
+    new ColumnDefinition('testAdimlari', 'Test Adımları',ColumnType.STRING),
+    new ColumnDefinition('kabulKriteri', 'Kabul Kriteri',ColumnType.STRING),
+    new ColumnDefinition('durum', 'State',ColumnType.STRING),
+    new ColumnDefinition('action', 'Action',ColumnType.CUSTOM),
+    new ColumnDefinition('expand', 'Expand', ColumnType.CUSTOM)
   ];
 
   data: TableData<Test>[] = [];
