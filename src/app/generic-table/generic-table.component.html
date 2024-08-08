@@ -38,8 +38,6 @@
   </mat-form-field>
 </div>
 
-
-
 <div *ngIf="showAddDataForm">
   <ng-container *ngFor="let column of columns">
     <mat-form-field appearance="fill" *ngIf="column.type !== ColumnType.CUSTOM">
@@ -50,10 +48,11 @@
   <button mat-raised-button color="primary" (click)="addData()">Add</button>
 </div>
 
+
 <table mat-table [dataSource]="dataSource" matSort  class="mat-elevation-z8">
   <ng-container *ngFor="let column of columns; let i = index" [matColumnDef]="column.key">
     <th mat-header-cell *matHeaderCellDef> {{ column.header }} </th>
-    <td mat-cell *matCellDef="let element" (click)="onRowClick(element)" [ngClass]="getStateClass(element.data[column.key])">
+    <td mat-cell *matCellDef="let element" (click)="onRowClick(element)" [ngClass]="getStateClass(element.data[column.key])" class="hover">
       <ng-container *ngIf="getTemplateForColumn(column.key); else defaultTemplate" [ngTemplateOutlet]="getTemplateForColumn(column.key)" [ngTemplateOutletContext]="{ $implicit: element, index: i }"></ng-container>
       <ng-template #defaultTemplate>
         <ng-container [ngSwitch]="column.type">
@@ -75,7 +74,8 @@
 
 
   <tr mat-header-row *matHeaderRowDef="displayedColumnKeys"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumnKeys"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumnKeys">   
+  </tr>
 </table>
 
 

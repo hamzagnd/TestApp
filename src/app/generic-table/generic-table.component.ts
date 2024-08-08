@@ -38,7 +38,14 @@ import 'jspdf-autotable';
 @Component({
   selector: 'app-generic-table',
   templateUrl: './generic-table.component.html',
-  styleUrls: ['./generic-table.component.css']
+  styleUrls: ['./generic-table.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class GenericTableComponent<T extends { [key: string]: any }> implements OnInit, AfterViewInit, OnChanges {
   @Input() columns: ColumnDefinition[] = [];
@@ -83,6 +90,11 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
     this.columnTemplates.forEach(template => {
       this.columnTemplateMap.set(template.columnName, template.templateRef);
     });
+  }
+  scrollToElement(element: HTMLElement) {
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
 
@@ -344,5 +356,4 @@ export class GenericTableComponent<T extends { [key: string]: any }> implements 
       this.snackBar.open('Please select a file and a sheet name.', 'Close', { duration: 3000 });
     }
   }
-
 }

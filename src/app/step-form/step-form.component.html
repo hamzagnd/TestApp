@@ -5,6 +5,10 @@
       <mat-label>VTD Madde No</mat-label>
       <input matInput formControlName="vtd_madde_no" required>
     </mat-form-field>
+      <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Topoloji</mat-label>
+      <textarea matInput formControlName="topoloji" required></textarea>
+    </mat-form-field>
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Test Adımları</mat-label>
       <textarea matInput formControlName="testAdimlari" required></textarea>
@@ -17,10 +21,11 @@
       <mat-label>Durum</mat-label>
       <input matInput formControlName="durum">
     </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
+   <!-- <mat-form-field appearance="fill" class="full-width">
       <mat-label>Yorum</mat-label>
       <textarea matInput formControlName="yorum"></textarea>
-    </mat-form-field>
+    </mat-form-field> -->
+    
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
