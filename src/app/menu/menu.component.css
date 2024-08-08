@@ -8,6 +8,7 @@ html, body, mat-sidenav-container, mat-sidenav, .example-sidenav-content {
   height: 100%;
   border: 1px solid rgba(0, 0, 0, 0.5);
 }
+
 .spacer {
   flex: 1 1 auto;
 }
